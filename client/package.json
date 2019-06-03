@@ -4,7 +4,7 @@
   "version": "0.3.0",
   "private": true,
   "author": "WalletConnect Pay <walletconnectpay@gmail.com>",
-  "license": "LGPL-3.0",
+  "license": "GPL-3.0",
   "dependencies": {
     "@walletconnect/browser": "^1.0.0-beta.25",
     "axios": "^0.18.0",
@@ -29,7 +29,7 @@
     "clean:node_modules": "rm -rf node_modules",
     "clean:all": "npm run clean:build && npm run clean:node_modules",
     "start": "react-scripts-ts start",
-    "build": "react-scripts-ts start",
+    "build": "react-scripts-ts build",
     "test": "react-scripts-ts test --env=jsdom",
     "eject": "react-scripts-ts eject"
   },
@@ -54,5 +54,6 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "proxy": "http://localhost:5001"
 }
