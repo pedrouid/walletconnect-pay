@@ -1,0 +1,35 @@
+{
+  "name": "walletconnect-pay",
+  "description": "WalletConnect Pay - Ethereum Point-of-Sale System with WalletConnect support",
+  "version": "0.3.0",
+  "private": true,
+  "author": "WalletConnect Pay <walletconnectpay@gmail.com>",
+  "license": "LGPL-3.0",
+  "scripts": {
+    "clean:server": "cd ./server && npm run clean:all",
+    "clean:client": "cd ./client && npm run clean:all",
+    "clean": "npm install && concurrently \"npm run clean:server\" \"npm run clean:server\"",
+    "bootstrap:server": "cd ./server && npm install",
+    "bootstrap:client": "cd ./client && npm install",
+    "bootstrap": "npm install && concurrently \"npm run bootstrap:server\" \"npm run bootstrap:server\"",
+    "build:server": "cd ./server && npm run build",
+    "build:client": "cd ./client && npm run build",
+    "build": "concurrently \"npm run build:server\" \"npm run build:client\"",
+    "dev:server": "cd ./server && npm run dev",
+    "dev:client": "cd ./client && npm run start",
+    "dev": "NODE_ENV=development concurrently \"npm run dev:server\" \"npm run dev:client\"",
+    "deploy:server": "cd ./server && npm run deploy",
+    "deploy": "npm run build && npm run deploy:server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pedrouid/walletconnect-pay-frontend.git"
+  },
+  "bugs": {
+    "url": "https://github.com/pedrouid/walletconnect-pay-frontend/issues"
+  },
+  "homepage": "https://github.com/pedrouid/walletconnect-pay-frontend#readme",
+  "devDependencies": {
+    "concurrently": "^4.1.0"
+  }
+}
