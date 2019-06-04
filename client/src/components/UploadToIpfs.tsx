@@ -6,7 +6,7 @@ import Upload from "../components/Upload";
 
 class UploadToIpfs extends React.Component<any, any> {
   public static propTypes = {
-    onSuccess: PropTypes.func.isRequired,
+    onUpload: PropTypes.func.isRequired,
     color: PropTypes.string,
     size: PropTypes.number,
     label: PropTypes.string
