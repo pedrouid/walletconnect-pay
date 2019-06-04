@@ -130,3 +130,16 @@ export const SGrid = styled.div<IGridStyleProps>`
   grid-row-gap: ${({ rowGap, gap }) =>
     rowGap ? `${rowGap}px` : gap ? `${gap}px` : `inherit`};
 `;
+
+export const SLabel = styled.label`
+  color: rgb(${colors.grey});
+  font-size: ${fonts.size.small};
+  font-weight: ${fonts.weight.semibold};
+  width: 100%;
+  margin-top: 16px;
+
+  & ~ input,
+  & ~ div {
+    margin-top: 8px;
+  }
+`;

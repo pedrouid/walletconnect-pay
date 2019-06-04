@@ -9,6 +9,7 @@ import Dropdown from "../components/Dropdown";
 import { adminUpdateBusinessProfile, adminSubmitSignUp } from "../redux/_admin";
 import BUSINESS_TYPES from "../constants/businessTypes";
 import COUNTRIES from "../constants/countries";
+import Upload from "../components/Upload";
 
 const SSubmitWrapper = styled.div`
   width: 100%;
@@ -41,6 +42,12 @@ class SignUp extends React.Component<any, ISignUpProps> {
     return (
       <PageWrapper maxWidth={600}>
         <h4>{`Sign Up`}</h4>
+
+        <Upload
+          onUpload={(logo: string) =>
+            this.props.adminUpdateBusinessProfile({ logo })
+          }
+        />
 
         <Input
           type="text"

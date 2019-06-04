@@ -1,4 +1,5 @@
 import axios from 'axios'
+import FormData from 'form-data'
 import config from './config'
 
 export const ipfsGetFile = async (fileHash: string): Promise<any> => {
@@ -21,14 +22,16 @@ export const ipfsGetFile = async (fileHash: string): Promise<any> => {
   return data
 }
 
-export const ipfsPostFile = async (data: any): Promise<string | null> => {
+export const ipfsPostFile = async (
+  formData: FormData
+): Promise<string | null> => {
   const response = await axios.post(
     'https://api.pinata.cloud/pinning/pinFileToIPFS',
-    data,
+    formData,
     {
+      maxContentLength: Infinity,
       headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
+        'Content-Type': `multipart/form-data; boundary="${formData.getBoundary()}"`,
         pinata_api_key: config.pinata.key,
         pinata_secret_api_key: config.pinata.secret
       }
@@ -36,6 +39,8 @@ export const ipfsPostFile = async (data: any): Promise<string | null> => {
   )
 
   let result = null
+
+  console.log('response.data', response.data)
 
   if (response.data.IpfsHash) {
     result = response.data.IpfsHash

@@ -78,20 +78,16 @@ export const apiGetAssetPrice = async (symbol: string) => {
   console.log("apiGetDaiPrice response.data", response.data); // tslint:disable-line
 };
 
-export const apiPinFile = async (data: any): Promise<string | null> => {
-  const response = await axios.post("/ipfs", data, {
+export const apiPinFile = async (
+  formData: FormData
+): Promise<string | null> => {
+  const response = await axios.post("/ipfs", formData, {
     headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json"
+      "Content-Type": "multipart/form-data"
     }
   });
 
-  let result = null;
-
-  if (response.data.IpfsHash) {
-    result = response.data.IpfsHash;
-  }
-
+  const { result } = response.data;
   return result;
 };
 

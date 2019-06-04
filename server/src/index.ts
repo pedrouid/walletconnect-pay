@@ -1,11 +1,17 @@
-import fastify from 'fastify'
 import path from 'path'
+import fs from 'fs'
+import pump from 'pump'
+import fastify from 'fastify'
 import helmet from 'fastify-helmet'
 import cors from 'fastify-cors'
+import log from 'fastify-log'
+import _static from 'fastify-static'
+import multipart from 'fastify-multipart'
+import FormData from 'form-data'
 import config from './config'
 import { ipfsGetFile, ipfsPostFile } from './pinata'
 import { sendVerifyEmail } from './mailgun'
-import { uuid } from './utilities'
+import { uuid, appendToFileName, resizeImage, deleteFile } from './utilities'
 
 interface IEmailVerification {
   id: string
@@ -15,14 +21,78 @@ interface IEmailVerification {
 
 const emailVerifications: IEmailVerification[] = []
 
-const app = fastify({ logger: config.debug })
+const app = fastify({
+  // logger: config.debug
+})
 
 app.register(helmet)
 app.register(cors)
+app.register(multipart)
+app.register(log)
+app.register(_static, { root: config.clientPath, wildcard: false })
 
-app.register(require('fastify-static'), {
-  root: path.join(__dirname, '../../client/build'),
-  wildcard: false
+function processUpload (req: any, res: any): Promise<string> {
+  return new Promise((resolve, reject) => {
+    fs.mkdir(
+      config.tempPath,
+      { recursive: true },
+      (err: NodeJS.ErrnoException | null) => {
+        if (err) {
+          reject(err)
+        }
+        let filePath = ''
+        req.multipart(
+          (field: any, file: any, fileName: any) => {
+            fileName = appendToFileName(fileName, `-${Date.now()}`)
+            filePath = path.join(config.tempPath, fileName)
+            pump(file, fs.createWriteStream(filePath))
+          },
+          async (err: Error) => {
+            if (err) {
+              reject(err)
+            }
+
+            const maximum = 500 // resize images to 500px max
+
+            filePath = await resizeImage(filePath, maximum)
+
+            resolve(filePath)
+          }
+        )
+      }
+    )
+  })
+}
+
+app.post('/ipfs', async (req: any, res) => {
+  try {
+    const filePath = await processUpload(req, res)
+
+    console.log('filePath', filePath)
+
+    let data = new FormData()
+
+    data.append('file', fs.createReadStream(filePath))
+
+    const result = await ipfsPostFile(data)
+
+    console.log('[ipfsPostFile] result', result)
+
+    res.status(200).send({
+      success: true,
+      result
+    })
+
+    await deleteFile(filePath)
+  } catch (error) {
+    console.error(error)
+
+    res.status(500).send({
+      success: false,
+      error: 'Internal Server Error',
+      message: error.message
+    })
+  }
 })
 
 app.get('/ipfs', async (req, res) => {
@@ -54,25 +124,6 @@ app.get('/ipfs', async (req, res) => {
   }
 })
 
-app.post('/ipfs', async (req, res) => {
-  try {
-    const response = await ipfsPostFile(req.body)
-
-    res.status(200).send({
-      success: true,
-      result: response
-    })
-  } catch (error) {
-    console.error(error)
-
-    res.status(500).send({
-      success: false,
-      error: 'Internal Server Error',
-      message: error.message
-    })
-  }
-})
-
 app.post('/send-email', async (req, res) => {
   const { email } = req.body
   const id = uuid()
@@ -84,11 +135,11 @@ app.post('/send-email', async (req, res) => {
   })
 
   try {
-    const response = await sendVerifyEmail(email, id)
+    const result = await sendVerifyEmail(email, id)
 
     res.status(200).send({
       success: true,
-      result: response
+      result
     })
   } catch (error) {
     console.error(error)
@@ -150,5 +201,4 @@ app.listen(config.port, (err, address) => {
   if (err) {
     throw err
   }
-  console.log(`Server listening on ${address}`)
 })
