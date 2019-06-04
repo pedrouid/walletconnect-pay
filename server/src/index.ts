@@ -21,12 +21,10 @@ interface IEmailVerification {
 
 const emailVerifications: IEmailVerification[] = []
 
-const app = fastify({
-  // logger: config.debug
-})
+const app = fastify({ logger: config.debug })
 
 app.register(helmet)
-app.register(cors)
+app.register(cors, { origin: config.env === 'development' })
 app.register(multipart)
 app.register(log)
 app.register(_static, { root: config.clientPath, wildcard: false })
@@ -68,15 +66,11 @@ app.post('/ipfs', async (req: any, res) => {
   try {
     const filePath = await processUpload(req, res)
 
-    console.log('filePath', filePath)
-
     let data = new FormData()
 
     data.append('file', fs.createReadStream(filePath))
 
     const result = await ipfsPostFile(data)
-
-    console.log('[ipfsPostFile] result', result)
 
     res.status(200).send({
       success: true,

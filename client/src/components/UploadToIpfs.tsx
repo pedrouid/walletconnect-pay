@@ -30,8 +30,7 @@ class UploadToIpfs extends React.Component<any, any> {
     return result;
   };
 
-  public onUpload = (url: string) =>
-    this.props.onUpload({ logo: getIpfsHash(url) });
+  public onUpload = (url: string) => this.props.onUpload(getIpfsHash(url));
 
   public render() {
     const { color, size, label } = this.props;
