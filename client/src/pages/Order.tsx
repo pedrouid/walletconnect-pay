@@ -30,7 +30,8 @@ import {
   SColumnFooter,
   SColumnList,
   SColumnRow,
-  STitle
+  STitle,
+  SGrid
 } from "../components/common";
 
 const SHeader = styled.div`
@@ -54,6 +55,10 @@ const SLogo = styled.img`
   border-radius: 6px;
   width: 40px;
   height: 40px;
+`;
+
+const SListItem = styled(ListItem)`
+  margin-bottom: 10px;
 `;
 
 class Order extends React.Component<any, any> {
@@ -90,7 +95,7 @@ class Order extends React.Component<any, any> {
       uri,
       orderId
     } = this.props;
-    const ratio = 100 * (2 / 3);
+    const ratio = 70;
     return !this.props.loading ? (
       <React.Fragment>
         <Helmet>
@@ -114,7 +119,7 @@ class Order extends React.Component<any, any> {
             <SColumnHeader>
               <STitle>{`Menu`}</STitle>
             </SColumnHeader>
-            <SColumnList>
+            <SGrid itemMaxWidth={360} itemMaxHeight={150} gap={10}>
               {businessMenu &&
                 businessMenu.map((item: IMenuItem) => (
                   <ListItem
@@ -124,7 +129,7 @@ class Order extends React.Component<any, any> {
                     onClick={() => this.props.orderAddItem(item)}
                   />
                 ))}
-            </SColumnList>
+            </SGrid>
           </SColumn>
           <SColumnOrder width={items.length ? 100 - ratio : 0}>
             <SColumnHeader>
@@ -132,7 +137,7 @@ class Order extends React.Component<any, any> {
             </SColumnHeader>
             <SColumnList>
               {items.map((item: IOrderItem) => (
-                <ListItem
+                <SListItem
                   noImage
                   key={`order-${item.name}`}
                   item={item}
