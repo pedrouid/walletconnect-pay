@@ -3,7 +3,7 @@ import * as PropTypes from "prop-types";
 import styled from "styled-components";
 import { connect } from "react-redux";
 import PageWrapper from "../components/PageWrapper";
-import { getCountryName } from "src/helpers/utilities";
+import { getCountryName, getIpfsUrl } from "src/helpers/utilities";
 
 const SLogo = styled.div`
   display: flex;
@@ -23,7 +23,7 @@ const SLabel = styled.p`
 
 class Admin extends React.Component<any, any> {
   public static propTypes = {
-    businessData: PropTypes.string.isRequired
+    businessData: PropTypes.object.isRequired
   };
 
   public render() {
@@ -32,7 +32,7 @@ class Admin extends React.Component<any, any> {
       <PageWrapper>
         <h4>{`Admin`}</h4>
         <SLogo>
-          <img src={profile.log} alt={profile.name} />
+          <img src={getIpfsUrl(profile.logo)} alt={profile.name} />
         </SLogo>
         <SLabel>{"Type"}</SLabel>
         <p>{profile.type}</p>

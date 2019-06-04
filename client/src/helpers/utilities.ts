@@ -5,6 +5,7 @@ import { convertStringToNumber, toFixed } from "./bignumber";
 import SUPPORTED_CHAINS from "../constants/chains";
 import NATIVE_CURRENCIES from "../constants/nativeCurrencies";
 import COUNTRIES from "../constants/countries";
+import { IPFS_GATEWAY } from "../constants/ipfs";
 
 export function capitalize(string: string): string {
   return string
@@ -204,4 +205,14 @@ export function getAppVersion() {
     version = arr.join("_");
   }
   return version;
+}
+
+export function getIpfsUrl(fileHash: string) {
+  const result = `${IPFS_GATEWAY}${fileHash}`;
+  return result;
+}
+
+export function getIpfsHash(url: string) {
+  const result = url.replace(IPFS_GATEWAY, "");
+  return result;
 }

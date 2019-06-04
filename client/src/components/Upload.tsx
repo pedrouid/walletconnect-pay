@@ -2,10 +2,12 @@ import * as React from "react";
 import * as PropTypes from "prop-types";
 import styled from "styled-components";
 import Icon from "./Icon";
-import { apiPinFile } from "../helpers/api";
+import Loader from "./Loader";
 import uploadIcon from "../assets/upload.svg";
 import { colors, transitions } from "../styles";
 import { SLabel } from "./common";
+
+const IMAGE_PADDING = 5;
 
 const SUploadWrapper = styled.div`
   width: 100%;
@@ -13,12 +15,14 @@ const SUploadWrapper = styled.div`
   flex-direction: column;
 `;
 
-interface IIconWrapperStyleProps {
+interface IUploadButtonStyleProps {
+  disabled?: boolean;
   color: string;
   size: number;
+  ratio: number;
 }
 
-const SUploadButton = styled.button<IIconWrapperStyleProps>`
+const SUploadButton = styled.button<IUploadButtonStyleProps>`
   position: relative;
   border: none;
   border-style: none;
@@ -27,13 +31,16 @@ const SUploadButton = styled.button<IIconWrapperStyleProps>`
   display: flex;
   justify-content: center;
   align-items: center;
-  cursor: pointer;
+  cursor: ${({ disabled }) => (disabled ? "auto" : "pointer")};
   will-change: transform;
   transition: ${transitions.button};
   width: ${({ size }) => `${size}px`};
-  height: ${({ size }) => `${size * (2 / 3)}px`};
+  height: ${({ size, ratio }) => `${size * ratio}px`};
   margin-top: 8px;
-  border: ${({ color }) => `2px dotted rgb(${colors[color]})`};
+  border: ${({ color, disabled }) =>
+    !disabled
+      ? `2px dotted rgb(${colors[color]})`
+      : `2px solid rgb(${colors[color]})`};
   @media (hover: hover) {
     &:hover {
       transform: ${({ disabled }) => (!disabled ? "translateY(-1px)" : "none")};
@@ -41,9 +48,28 @@ const SUploadButton = styled.button<IIconWrapperStyleProps>`
   }
 `;
 
+interface IImageDisplayStyledProps {
+  url: string;
+}
+
+const SImageDisplay = styled.div<IImageDisplayStyledProps>`
+  position: absolute;
+  top: ${IMAGE_PADDING}px;
+  bottom: ${IMAGE_PADDING}px;
+  left: ${IMAGE_PADDING}px;
+  right: ${IMAGE_PADDING}px;
+  overflow: hidden;
+  background-image: ${({ url }) => `url(${url})`};
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+`;
+
 class Upload extends React.Component<any, any> {
   public static propTypes = {
-    onUpload: PropTypes.func.isRequired,
+    apiHandler: PropTypes.func.isRequired,
+    onSuccess: PropTypes.func.isRequired,
+    onError: PropTypes.func,
     color: PropTypes.string,
     size: PropTypes.number,
     label: PropTypes.string
@@ -52,7 +78,8 @@ class Upload extends React.Component<any, any> {
   public static defaultProps = {
     color: "grey",
     size: 200,
-    label: "Upload Image"
+    ratio: 1,
+    label: ""
   };
 
   public inputRef: React.RefObject<HTMLInputElement>;
@@ -67,6 +94,11 @@ class Upload extends React.Component<any, any> {
     return _input;
   }
 
+  public state = {
+    uploading: false,
+    result: ""
+  };
+
   constructor(props: any) {
     super(props);
     this.inputRef = React.createRef();
@@ -74,21 +106,18 @@ class Upload extends React.Component<any, any> {
 
   public onUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target && event.target.files) {
-      const files = Array.from(event.target.files);
-
       this.setState({ uploading: true });
+      try {
+        const files = Array.from(event.target.files);
 
-      const formData = new FormData();
+        const result = await this.props.apiHandler(files);
 
-      files.forEach((file: File, index: number) => {
-        formData.append(`${index}`, file);
-      });
-
-      const ipfsHash = await apiPinFile(formData);
-
-      console.log("[onUpload] ipfsHash", ipfsHash); // tslint:disable-line
-
-      this.props.onUpload(ipfsHash);
+        this.setState({ uploading: false, result });
+        this.props.onSuccess(result);
+      } catch (err) {
+        this.setState({ uploading: false });
+        this.props.onError(err);
+      }
     }
   };
 
@@ -99,12 +128,18 @@ class Upload extends React.Component<any, any> {
   };
 
   public render() {
-    const { color, size, label } = this.props;
+    const { uploading, result } = this.state;
+    const { color, size, ratio, label } = this.props;
     return (
       <SUploadWrapper>
-        <SLabel>{label}</SLabel>
-        <SUploadButton size={size} color={color} onClick={this.onClick}>
-          <Icon size={size / 4} icon={uploadIcon} color={color} />
+        {!!label && <SLabel>{label}</SLabel>}
+        <SUploadButton
+          disabled={!!result && !uploading}
+          size={size}
+          color={color}
+          ratio={ratio}
+          onClick={this.onClick}
+        >
           <input
             ref={this.inputRef}
             type="file"
@@ -112,6 +147,13 @@ class Upload extends React.Component<any, any> {
             style={{ display: "none" }}
             onChange={this.onUpload}
           />
+          {result ? (
+            <SImageDisplay url={result} />
+          ) : !uploading ? (
+            <Icon size={size / 4} icon={uploadIcon} color={color} />
+          ) : (
+            <Loader size={size / 4} color={color} />
+          )}
         </SUploadButton>
       </SUploadWrapper>
     );

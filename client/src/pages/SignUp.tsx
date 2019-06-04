@@ -6,9 +6,11 @@ import PageWrapper from "../components/PageWrapper";
 import Input from "../components/Input";
 import Button from "../components/Button";
 import Dropdown from "../components/Dropdown";
+import { apiPinFile } from "../helpers/api";
 import { adminUpdateBusinessProfile, adminSubmitSignUp } from "../redux/_admin";
 import BUSINESS_TYPES from "../constants/businessTypes";
 import COUNTRIES from "../constants/countries";
+import { getIpfsUrl, getIpfsHash } from "../helpers/utilities";
 import Upload from "../components/Upload";
 
 const SSubmitWrapper = styled.div`
@@ -38,15 +40,37 @@ class SignUp extends React.Component<any, ISignUpProps> {
     email: PropTypes.string.isRequired
   };
 
+  public handleApiUpload = async (files: File[]) => {
+    const formData = new FormData();
+
+    files.forEach((file: File, idx: number) => {
+      formData.append(`${idx}`, file);
+    });
+
+    const fileHash = await apiPinFile(formData);
+
+    let result = "";
+
+    if (fileHash) {
+      result = getIpfsUrl(fileHash);
+    }
+
+    return result;
+  };
+
+  public onUpload = (url: string) =>
+    this.props.adminUpdateBusinessProfile({ logo: getIpfsHash(url) });
+
   public render() {
     return (
       <PageWrapper maxWidth={600}>
         <h4>{`Sign Up`}</h4>
 
         <Upload
-          onUpload={(logo: string) =>
-            this.props.adminUpdateBusinessProfile({ logo })
-          }
+          size={300}
+          label={`Business Logo`}
+          apiHandler={this.handleApiUpload}
+          onSuccess={this.onUpload}
         />
 
         <Input
