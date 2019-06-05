@@ -16,7 +16,7 @@ import {
 } from "../redux/_order";
 import Button from "../components/Button";
 import PageWrapper from "../components/PageWrapper";
-import PaymentModal from "../components/PaymentModal";
+import Checkout from "../components/Checkout";
 import PaymentMethods from "../components/PaymentMethods";
 import Summary from "../components/Summary";
 import Modal from "../components/Modal";
@@ -157,7 +157,7 @@ class Order extends React.Component<any, any> {
             </SColumnFooter>
           </SColumnOrder>
 
-          <PaymentModal
+          <Checkout
             loading={loading}
             businessData={businessData}
             submitted={submitted}

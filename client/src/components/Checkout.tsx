@@ -185,7 +185,7 @@ function formatBurnerUrl(
   return url;
 }
 
-const PaymentModal = ({
+const Checkout = ({
   loading,
   businessData,
   submitted,
@@ -247,4 +247,4 @@ const PaymentModal = ({
   );
 };
 
-export default PaymentModal;
+export default Checkout;
