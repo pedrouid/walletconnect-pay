@@ -8,14 +8,15 @@ import {
   // Redirect
 } from "react-router-dom";
 import { connect } from "react-redux";
-// import Notification from "./components/Notification";
 import Home from "./pages/Home";
 import Order from "./pages/Order";
 import Admin from "./pages/Admin";
 import SignUp from "./pages/SignUp";
 import NotFound from "./pages/NotFound";
+import Notification from "./components/Notification";
 
 const SLayout = styled.div`
+  position: relative;
   height: 100%;
   width: 100%;
   max-height: 100vh;
@@ -50,7 +51,7 @@ class App extends React.Component<any, any> {
               exact
               path="/order"
               render={routerProps => {
-                // if (!this.props.web3) {
+                // if (!this.props.address) {
                 //   return <Redirect to="/" />;
                 // }
                 return <Order {...routerProps} />;
@@ -60,7 +61,7 @@ class App extends React.Component<any, any> {
               exact
               path="/signup"
               render={routerProps => {
-                // if (!this.props.web3) {
+                // if (!this.props.address) {
                 //   return <Redirect to="/" />;
                 // }
                 return <SignUp {...routerProps} />;
@@ -69,7 +70,7 @@ class App extends React.Component<any, any> {
             <Route
               path="/admin"
               render={routerProps => {
-                // if (!this.props.web3) {
+                // if (!this.props.address) {
                 //   return <Redirect to="/" />;
                 // }
                 return <Admin {...routerProps} />;
@@ -78,16 +79,15 @@ class App extends React.Component<any, any> {
             <Route component={NotFound} />
           </Switch>
         </SContent>
-        {/* TODO: Fix Notification Render Error */}
-        {/* <Notification /> */}
+        <Notification />
       </SLayout>
     );
   }
 }
 
 const reduxProps = (store: any) => ({
-  web3: store.admin.web3,
-  businessName: store.admin.businessName
+  address: store.admin.address,
+  businessProfile: store.admin.businessProfile
 });
 
 export default withRouter(connect(
