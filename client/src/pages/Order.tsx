@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import styled from "styled-components";
 
 import { colors } from "../styles";
-import { IMenuItem, IOrderItem, IPaymentMethod } from "../helpers/types";
+import { IMenuItem, IOrderItem } from "../helpers/types";
 import {
   orderLoadMenu,
   orderShowPaymentMethods,
@@ -17,9 +17,7 @@ import {
 import Button from "../components/Button";
 import PageWrapper from "../components/PageWrapper";
 import Checkout from "../components/Checkout";
-import PaymentMethods from "../components/PaymentMethods";
 import Summary from "../components/Summary";
-import Modal from "../components/Modal";
 import Loader from "../components/Loader";
 import ListItem from "../components/ListItem";
 import {
@@ -77,16 +75,11 @@ class Order extends React.Component<any, any> {
     }
   };
 
-  public onChoosePayment = (paymentMethod?: IPaymentMethod) =>
-    this.props.orderChoosePaymentMethod(paymentMethod);
-
   public render() {
     const {
       businessData,
       businessMenu,
-      choosePayment,
       paymentMethod,
-      warning,
       loading,
       submitted,
       items,
@@ -168,16 +161,6 @@ class Order extends React.Component<any, any> {
             orderId={orderId}
             orderUnsubmit={this.props.orderUnsubmit}
           />
-
-          <PaymentMethods
-            show={choosePayment}
-            callback={this.onChoosePayment}
-            businessData={businessData}
-          />
-
-          <Modal show={warning.show}>
-            <h4>{warning.message}</h4>
-          </Modal>
         </SColumnWrapper>
       </React.Fragment>
     ) : (
@@ -191,9 +174,7 @@ class Order extends React.Component<any, any> {
 const reduxProps = (store: any) => ({
   businessData: store.order.businessData,
   businessMenu: store.order.businessMenu,
-  choosePayment: store.order.choosePayment,
   paymentMethod: store.order.paymentMethod,
-  warning: store.order.warning,
   loading: store.order.loading,
   submitted: store.order.submitted,
   items: store.order.items,

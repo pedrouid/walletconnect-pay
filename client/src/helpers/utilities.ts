@@ -115,7 +115,7 @@ export function uuid(): string {
 
 export function getChainData(chainId: number): IChainData {
   const chainData = SUPPORTED_CHAINS.filter(
-    (chain: any) => chain.code === chainId
+    (chain: any) => chain.chain_id === chainId
   )[0];
 
   if (!chainData) {

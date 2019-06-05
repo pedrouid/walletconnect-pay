@@ -1,7 +1,6 @@
 import * as React from "react";
 import styled from "styled-components";
 import { IPaymentMethod } from "../helpers/types";
-import Modal from "../components/Modal";
 import Button from "../components/Button";
 
 // import burner from "../assets/payment-methods/burner.png";
@@ -17,7 +16,7 @@ const SButton = styled(Button)`
 `;
 
 const PaymentMethods = (props: any) => {
-  const { show, businessData, callback } = props;
+  const { businessData, callback } = props;
   if (
     !(
       businessData &&
@@ -29,7 +28,7 @@ const PaymentMethods = (props: any) => {
     return null;
   }
   return (
-    <Modal show={show} toggleModal={callback}>
+    <React.Fragment>
       {businessData.payment.methods.map((method: IPaymentMethod) => {
         if (method.type === "walletconnect") {
           return (
@@ -48,7 +47,7 @@ const PaymentMethods = (props: any) => {
         }
         return null;
       })}
-    </Modal>
+    </React.Fragment>
   );
 };
 

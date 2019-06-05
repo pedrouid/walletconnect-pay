@@ -16,6 +16,12 @@ import {
 
 import { IPayment } from "../helpers/types";
 
+import {
+  PAYMENT_SUCCESS,
+  PAYMENT_PENDING,
+  PAYMENT_FAILURE
+} from "../constants/paymentStatus";
+
 import success from "../assets/success.png";
 import error from "../assets/error.png";
 import arrow from "../assets/arrow.png";
@@ -112,15 +118,15 @@ const SBackButton = styled.div`
 `;
 
 const PAYMENT_COPY = {
-  success: {
+  [PAYMENT_SUCCESS]: {
     title: "Success",
     description: `Your payment went through and your order is being prepared.`
   },
-  pending: {
+  [PAYMENT_PENDING]: {
     title: "Payment Pending",
     description: `We are waiting for a blockchain confirmation of your payment.`
   },
-  failure: {
+  [PAYMENT_FAILURE]: {
     title: "Payment Failed",
     description: `Please check your wallet to for any transaction information.`
   }
@@ -128,21 +134,23 @@ const PAYMENT_COPY = {
 
 const PaymentResult = (props: { payment: IPayment }) => {
   switch (props.payment.status) {
-    case "success":
+    case PAYMENT_SUCCESS:
       return (
         <SModalColumn>
           <SPaymentResult>
             <div>
-              <img src={success} alt={PAYMENT_COPY.success.title} />
+              <img src={success} alt={PAYMENT_COPY[PAYMENT_SUCCESS].title} />
             </div>
           </SPaymentResult>
-          <SModalCallToAction>{PAYMENT_COPY.success.title}</SModalCallToAction>
+          <SModalCallToAction>
+            {PAYMENT_COPY[PAYMENT_SUCCESS].title}
+          </SModalCallToAction>
           <SModalDescription>
-            {PAYMENT_COPY.success.description}
+            {PAYMENT_COPY[PAYMENT_SUCCESS].description}
           </SModalDescription>
         </SModalColumn>
       );
-    case "pending":
+    case PAYMENT_PENDING:
       return (
         <SModalColumn>
           <SPaymentResult>
@@ -150,24 +158,28 @@ const PaymentResult = (props: { payment: IPayment }) => {
               <Loader />
             </div>
           </SPaymentResult>
-          <SModalCallToAction>{PAYMENT_COPY.pending.title}</SModalCallToAction>
+          <SModalCallToAction>
+            {PAYMENT_COPY[PAYMENT_PENDING].title}
+          </SModalCallToAction>
           <SModalDescription>
-            {PAYMENT_COPY.pending.description}
+            {PAYMENT_COPY[PAYMENT_PENDING].description}
           </SModalDescription>
         </SModalColumn>
       );
 
-    case "failure":
+    case PAYMENT_FAILURE:
       return (
         <SModalColumn>
           <SPaymentResult>
             <div>
-              <img src={error} alt={PAYMENT_COPY.failure.title} />
+              <img src={error} alt={PAYMENT_COPY[PAYMENT_FAILURE].title} />
             </div>
           </SPaymentResult>
-          <SModalCallToAction>{PAYMENT_COPY.failure.title}</SModalCallToAction>
+          <SModalCallToAction>
+            {PAYMENT_COPY[PAYMENT_FAILURE].title}
+          </SModalCallToAction>
           <SModalDescription>
-            {PAYMENT_COPY.failure.description}
+            {PAYMENT_COPY[PAYMENT_FAILURE].description}
           </SModalDescription>
         </SModalColumn>
       );

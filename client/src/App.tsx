@@ -14,6 +14,7 @@ import Admin from "./pages/Admin";
 import SignUp from "./pages/SignUp";
 import NotFound from "./pages/NotFound";
 import Notification from "./components/Notification";
+import ModalController from "./modals";
 
 const SLayout = styled.div`
   position: relative;
@@ -47,7 +48,8 @@ class App extends React.Component<any, any> {
         <SContent>
           <Switch>
             <Route exact path="/" component={Home} />
-            <Route
+            <Route exact path="/order/:businessName" component={Order} />
+            {/* <Route
               exact
               path="/order"
               render={routerProps => {
@@ -56,7 +58,7 @@ class App extends React.Component<any, any> {
                 // }
                 return <Order {...routerProps} />;
               }}
-            />
+            /> */}
             <Route
               exact
               path="/signup"
@@ -80,6 +82,7 @@ class App extends React.Component<any, any> {
           </Switch>
         </SContent>
         <Notification />
+        <ModalController />
       </SLayout>
     );
   }

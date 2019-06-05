@@ -15,7 +15,7 @@ export const notificationShow = (
 
   timeoutHide = setTimeout(
     () => dispatch({ type: NOTIFICATION_HIDE }),
-    15000 // 15 secs
+    8000 // 8 secs
   );
 };
 

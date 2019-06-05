@@ -40,8 +40,6 @@ export const ipfsPostFile = async (
 
   let result = null
 
-  console.log('response.data', response.data)
-
   if (response.data.IpfsHash) {
     result = response.data.IpfsHash
   }

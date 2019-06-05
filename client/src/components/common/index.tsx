@@ -161,3 +161,11 @@ export const SCenter = styled.div`
   justify-content: center;
   align-items: center;
 `;
+
+export const SCenterColumn = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+`;
