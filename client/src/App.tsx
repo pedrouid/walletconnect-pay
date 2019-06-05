@@ -46,7 +46,16 @@ class App extends React.Component<any, any> {
         <SContent>
           <Switch>
             <Route exact path="/" component={Home} />
-            <Route exact path="/order/:businessName" component={Order} />
+            <Route
+              exact
+              path="/order"
+              render={routerProps => {
+                // if (!this.props.web3) {
+                //   return <Redirect to="/" />;
+                // }
+                return <Order {...routerProps} />;
+              }}
+            />
             <Route
               exact
               path="/signup"
@@ -60,7 +69,7 @@ class App extends React.Component<any, any> {
             <Route
               path="/admin"
               render={routerProps => {
-                // if (!this.props.web3 && !this.props.businessName) {
+                // if (!this.props.web3) {
                 //   return <Redirect to="/" />;
                 // }
                 return <Admin {...routerProps} />;
