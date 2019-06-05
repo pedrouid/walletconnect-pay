@@ -31,6 +31,7 @@ const SUploadButton = styled.button<IUploadButtonStyleProps>`
   display: flex;
   justify-content: center;
   align-items: center;
+  background: rgb(${colors.white});
   cursor: ${({ disabled }) => (disabled ? "auto" : "pointer")};
   will-change: transform;
   transition: ${transitions.button};

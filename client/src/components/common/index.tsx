@@ -153,3 +153,11 @@ export const SField = styled.p`
   font-weight: 600;
   line-height: 1.2;
 `;
+
+export const SCenter = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;

@@ -73,6 +73,7 @@ const SContentCard = styled.div`
   box-shadow: ${shadows.soft};
   background: rgb(${colors.white});
   color: rgb(${colors.dark});
+  overflow: hidden;
 `;
 
 const SHeaderSection = styled.div`

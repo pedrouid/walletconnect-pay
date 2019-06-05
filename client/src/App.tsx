@@ -58,7 +58,6 @@ class App extends React.Component<any, any> {
               }}
             />
             <Route
-              exact
               path="/admin"
               render={routerProps => {
                 // if (!this.props.web3 && !this.props.businessName) {
