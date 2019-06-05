@@ -3,6 +3,7 @@ import { convertHexToNumber } from "@walletconnect/utils";
 import { IChainData } from "./types";
 import { convertStringToNumber, toFixed } from "./bignumber";
 import SUPPORTED_CHAINS from "../constants/chains";
+import BUSINESS_TYPES from "../constants/businessTypes";
 import NATIVE_CURRENCIES from "../constants/nativeCurrencies";
 import COUNTRIES from "../constants/countries";
 import { IPFS_GATEWAY } from "../constants/ipfs";
@@ -190,6 +191,24 @@ export function getCountryName(code: string): string {
     }
 
     name = country.name;
+  }
+
+  return name;
+}
+
+export function getBusinessType(type: string): string {
+  let name = "";
+
+  if (type.trim()) {
+    const businessType = BUSINESS_TYPES.filter(
+      (chain: any) => chain.type === type
+    )[0];
+
+    if (!businessType) {
+      throw new Error("Business type missing or not supported");
+    }
+
+    name = businessType.display_name;
   }
 
   return name;

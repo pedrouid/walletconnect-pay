@@ -61,11 +61,13 @@ export const SColumnOrder = styled(SColumn)`
 
 export const SColumnHeader = styled.div`
   border-bottom: 1px solid rgb(${colors.lightGrey});
+  background: rgb(${colors.white});
   padding: 20px;
 `;
 
 export const SColumnFooter = styled.div`
   border-top: 1px solid rgb(${colors.lightGrey});
+  background: rgb(${colors.white});
   padding: 20px;
 `;
 
@@ -80,6 +82,7 @@ export const SColumnList = styled.div<IColumnListStyleProps>`
   padding: 24px;
   display: flex;
   flex-direction: column;
+  background: rgb(${colors.white});
   max-height: 100vh;
   overflow-x: hidden;
   overflow-y: scroll;
@@ -119,6 +122,7 @@ export const SGrid = styled.div<IGridStyleProps>`
   padding: 24px;
   overflow-x: hidden;
   overflow-y: scroll;
+  background: rgb(${colors.white});
 
   display: grid;
   grid-template-columns: ${({ itemMaxWidth }) =>
@@ -142,4 +146,10 @@ export const SLabel = styled.label`
   & ~ div {
     margin-top: 8px;
   }
+`;
+
+export const SField = styled.p`
+  width: 100%;
+  font-weight: 600;
+  line-height: 1.2;
 `;

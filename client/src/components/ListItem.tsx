@@ -19,6 +19,7 @@ const SListItem = styled.div<IListItemStyleProps>`
 
   border-radius: 6px;
   border: 1px solid rgb(${colors.lightGrey});
+  background: rgb(${colors.white});
 
   transform: translate3d(0, 0, 0);
   box-shadow: ${shadows.base};

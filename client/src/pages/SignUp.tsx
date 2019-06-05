@@ -3,6 +3,7 @@ import * as PropTypes from "prop-types";
 import styled from "styled-components";
 import { connect } from "react-redux";
 import PageWrapper from "../components/PageWrapper";
+import Card from "../components/Card";
 import Input from "../components/Input";
 import Button from "../components/Button";
 import Dropdown from "../components/Dropdown";
@@ -40,63 +41,65 @@ class SignUp extends React.Component<any, ISignUpProps> {
 
   public render() {
     return (
-      <PageWrapper maxWidth={600}>
-        <h4>{`Sign Up`}</h4>
+      <PageWrapper>
+        <Card shadow margin={20}>
+          {/* <h4>{`Sign Up`}</h4> */}
 
-        <UploadToIpfs
-          size={300}
-          label={`Business Logo`}
-          onUpload={(logo: string) =>
-            this.props.adminUpdateBusinessProfile({ logo })
-          }
-        />
+          <UploadToIpfs
+            size={200}
+            label={`Business Logo`}
+            onUpload={(logo: string) =>
+              this.props.adminUpdateBusinessProfile({ logo })
+            }
+          />
 
-        <Input
-          type="text"
-          label="Business Name"
-          placeholder="Crypto Café"
-          value={this.props.name}
-          disabled={false}
-          onChange={(e: any) =>
-            this.props.adminUpdateBusinessProfile({ name: e.target.value })
-          }
-        />
+          <Input
+            type="text"
+            label="Business Name"
+            placeholder="Crypto Café"
+            value={this.props.name}
+            disabled={false}
+            onChange={(e: any) =>
+              this.props.adminUpdateBusinessProfile({ name: e.target.value })
+            }
+          />
 
-        <Dropdown
-          label="Business Type"
-          selected={this.props.type}
-          options={BUSINESS_TYPES}
-          displayKey={"display_type"}
-          targetKey={"type"}
-          onChange={(type: string) =>
-            this.props.adminUpdateBusinessProfile({ type })
-          }
-        />
+          <Dropdown
+            label="Business Type"
+            selected={this.props.type}
+            options={BUSINESS_TYPES}
+            displayKey={"display_name"}
+            targetKey={"type"}
+            onChange={(type: string) =>
+              this.props.adminUpdateBusinessProfile({ type })
+            }
+          />
 
-        <Input
-          type="email"
-          label="Email"
-          placeholder="contact@cryptocafe.com"
-          value={this.props.email}
-          disabled={false}
-          onChange={(e: any) =>
-            this.props.adminUpdateBusinessProfile({ email: e.target.value })
-          }
-        />
+          <Input
+            type="email"
+            label="Email"
+            placeholder="contact@cryptocafe.com"
+            value={this.props.email}
+            disabled={false}
+            onChange={(e: any) =>
+              this.props.adminUpdateBusinessProfile({ email: e.target.value })
+            }
+          />
 
-        <Dropdown
-          label="Country"
-          selected={this.props.country}
-          options={COUNTRIES}
-          displayKey={"name"}
-          targetKey={"code"}
-          onChange={(country: string) =>
-            this.props.adminUpdateBusinessProfile({ country })
-          }
-        />
-        <SSubmitWrapper>
-          <Button onClick={this.props.adminSubmitSignUp}>{`Submit`}</Button>
-        </SSubmitWrapper>
+          <Dropdown
+            label="Country"
+            selected={this.props.country}
+            options={COUNTRIES}
+            displayKey={"name"}
+            targetKey={"code"}
+            onChange={(country: string) =>
+              this.props.adminUpdateBusinessProfile({ country })
+            }
+          />
+          <SSubmitWrapper>
+            <Button onClick={this.props.adminSubmitSignUp}>{`Submit`}</Button>
+          </SSubmitWrapper>
+        </Card>
       </PageWrapper>
     );
   }
