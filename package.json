@@ -1,6 +1,6 @@
 {
   "name": "walletconnect-pay",
-  "description": "WalletConnect Pay - Ethereum Point-of-Sale System with WalletConnect support",
+  "description": "WalletConnect Pay - Ethereum POS System with WalletConnect support",
   "version": "0.3.0",
   "private": true,
   "author": "WalletConnect Pay <walletconnectpay@gmail.com>",

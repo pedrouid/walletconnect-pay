@@ -34,7 +34,7 @@ import {
 
 const SHeader = styled.div`
   width: 100%;
-  background-color: rgb(${colors.dark});
+  background-color: rgb(${colors.darkBlue});
   color: rgb(${colors.white});
   display: flex;
   align-items: center;

@@ -1,7 +1,7 @@
 import { utils } from "ethers";
 import { convertHexToNumber } from "@walletconnect/utils";
 import { IChainData } from "./types";
-import { convertStringToNumber, toFixed } from "./bignumber";
+import { convertStringToNumber, handleSignificantDecimals } from "./bignumber";
 import SUPPORTED_CHAINS from "../constants/chains";
 import BUSINESS_TYPES from "../constants/businessTypes";
 import NATIVE_CURRENCIES from "../constants/nativeCurrencies";
@@ -89,6 +89,36 @@ export function removeHexPrefix(hex: string): string {
   return hex;
 }
 
+export function getUrlProtocol(url: string): string {
+  const protocolRegex = new RegExp(/(?:\w+):\/\//);
+
+  let protocol = "";
+
+  const matches = protocolRegex.exec(url);
+
+  if (matches) {
+    protocol = matches[0];
+  }
+
+  return protocol;
+}
+
+export function sanitizeUrl(url: string): string {
+  const protocol = getUrlProtocol(url);
+
+  if (protocol) {
+    url = url.replace(protocol, "");
+  }
+
+  let result = url.replace(/\/+/g, "/").replace(/\/+$/, "");
+
+  if (protocol) {
+    result = protocol + result;
+  }
+
+  return result;
+}
+
 export function payloadId(): number {
   const datePart: number = new Date().getTime() * Math.pow(10, 3);
   const extraPart: number = Math.floor(Math.random() * Math.pow(10, 3));
@@ -167,15 +197,15 @@ export function getNativeCurrency(symbol: string) {
 }
 
 export function formatDisplayAmount(amount: number, symbol: string) {
-  let result = toFixed(amount, 2);
   const nativeCurrency = getNativeCurrency(symbol);
+  let decimals = 2;
+  let result = handleSignificantDecimals(`${amount}`, decimals);
   if (nativeCurrency) {
+    decimals = nativeCurrency.decimals;
+    const { symbol, alignment } = nativeCurrency;
+    const _amount = handleSignificantDecimals(`${amount}`, decimals);
     result =
-      nativeCurrency.alignment === "left"
-        ? `${nativeCurrency.symbol} ${toFixed(amount, nativeCurrency.decimals)}`
-        : `${toFixed(amount, nativeCurrency.decimals)} ${
-            nativeCurrency.symbol
-          }`;
+      alignment === "left" ? `${symbol} ${_amount}` : `${_amount} ${symbol}`;
   }
   return result;
 }

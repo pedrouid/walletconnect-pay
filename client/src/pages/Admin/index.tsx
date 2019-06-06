@@ -2,9 +2,9 @@ import * as React from "react";
 import * as PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Route, Switch, Redirect } from "react-router-dom";
-import Dashboard from "../../components/Dashboard";
+import Dashboard from "../../layouts/Dashboard";
 import Overview from "./Overview";
-import Profile from "./Profile";
+import Settings from "./Settings";
 
 class Admin extends React.Component<any, any> {
   public static propTypes = {
@@ -15,13 +15,13 @@ class Admin extends React.Component<any, any> {
   public render() {
     const { businessData, match } = this.props;
     return (
-      <Dashboard>
+      <Dashboard match={match}>
         <Switch>
           <Route exact path={match.url} component={Overview} />
           <Route
             exact
-            path={`${match.url}/profile`}
-            render={() => <Profile profile={businessData.profile} />}
+            path={`${match.url}/settings`}
+            render={() => <Settings profile={businessData.profile} />}
           />
           <Route render={() => <Redirect to={match.url} />} />
         </Switch>
