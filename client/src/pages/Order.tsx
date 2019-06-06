@@ -1,10 +1,5 @@
 import * as React from "react";
-import Helmet from "react-helmet";
 import { connect } from "react-redux";
-import styled from "styled-components";
-
-import { colors } from "../styles";
-import { IMenuItem, IOrderItem } from "../helpers/types";
 import {
   orderLoadMenu,
   orderShowPaymentMethods,
@@ -14,50 +9,10 @@ import {
   orderSubmit,
   orderUnsubmit
 } from "../redux/_order";
-import Button from "../components/Button";
 import PageWrapper from "../components/PageWrapper";
-import Checkout from "../components/Checkout";
-import Summary from "../components/Summary";
+import Checkout from "../layouts/Checkout";
 import Loader from "../components/Loader";
-import ListItem from "../components/ListItem";
-import {
-  SColumnWrapper,
-  SColumn,
-  SColumnOrder,
-  SColumnHeader,
-  SColumnFooter,
-  SColumnList,
-  SColumnRow,
-  STitle,
-  SGrid
-} from "../components/common";
-
-const SHeader = styled.div`
-  width: 100%;
-  background-color: rgb(${colors.darkBlue});
-  color: rgb(${colors.white});
-  display: flex;
-  align-items: center;
-  padding: 0 16px;
-  height: 82px;
-`;
-
-const SBranding = styled.h1`
-  text-transform: uppercase;
-  font-size: 24px;
-  margin: 4px 0px;
-  margin-left: 10px;
-`;
-
-const SLogo = styled.img`
-  border-radius: 6px;
-  width: 40px;
-  height: 40px;
-`;
-
-const SListItem = styled(ListItem)`
-  margin-bottom: 10px;
-`;
+import OrderMenu from "../layouts/OrderMenu";
 
 class Order extends React.Component<any, any> {
   public componentDidMount() {
@@ -88,80 +43,28 @@ class Order extends React.Component<any, any> {
       uri,
       orderId
     } = this.props;
-    const ratio = 70;
     return !this.props.loading ? (
       <React.Fragment>
-        <Helmet>
-          <title>{businessData.profile.name}</title>
-          <meta name="description" content={businessData.profile.description} />
-          <link
-            rel="shortcut icon"
-            type="image/png"
-            href={businessData.profile.logo}
-            sizes="16x16"
-          />
-        </Helmet>
-        <SHeader>
-          {businessData.profile.logo && (
-            <SLogo src={businessData.profile.logo} alt="" />
-          )}
-          <SBranding>{businessData.profile.name}</SBranding>
-        </SHeader>
-        <SColumnWrapper>
-          <SColumn width={items.length ? ratio : 100}>
-            <SColumnHeader>
-              <STitle>{`Menu`}</STitle>
-            </SColumnHeader>
-            <SGrid itemMaxWidth={360} itemMaxHeight={150} gap={10}>
-              {businessMenu &&
-                businessMenu.map((item: IMenuItem) => (
-                  <ListItem
-                    key={`menu-${item.name}`}
-                    item={item}
-                    businessData={businessData}
-                    onClick={() => this.props.orderAddItem(item)}
-                  />
-                ))}
-            </SGrid>
-          </SColumn>
-          <SColumnOrder width={items.length ? 100 - ratio : 0}>
-            <SColumnHeader>
-              <STitle>{`Order`}</STitle>
-            </SColumnHeader>
-            <SColumnList>
-              {items.map((item: IOrderItem) => (
-                <SListItem
-                  noImage
-                  key={`order-${item.name}`}
-                  item={item}
-                  businessData={businessData}
-                  actions={[
-                    { label: "Remove", callback: this.props.orderRemoveItem },
-                    { label: "Add", callback: this.props.orderAddItem }
-                  ]}
-                />
-              ))}
-            </SColumnList>
-            <SColumnFooter>
-              <Summary checkout={checkout} businessData={businessData} />
-              <SColumnRow>
-                <Button marginTop={12} onClick={this.onSubmit}>{`Pay`}</Button>
-              </SColumnRow>
-            </SColumnFooter>
-          </SColumnOrder>
-
-          <Checkout
-            loading={loading}
-            businessData={businessData}
-            submitted={submitted}
-            payment={payment}
-            paymentMethod={paymentMethod}
-            checkout={checkout}
-            uri={uri}
-            orderId={orderId}
-            orderUnsubmit={this.props.orderUnsubmit}
-          />
-        </SColumnWrapper>
+        <OrderMenu
+          businessData={businessData}
+          businessMenu={businessMenu}
+          items={items}
+          checkout={checkout}
+          onSubmit={this.onSubmit}
+          onAdd={this.props.orderAddItem}
+          onRemove={this.props.orderRemoveItem}
+        />
+        <Checkout
+          loading={loading}
+          businessData={businessData}
+          submitted={submitted}
+          payment={payment}
+          paymentMethod={paymentMethod}
+          checkout={checkout}
+          uri={uri}
+          orderId={orderId}
+          orderUnsubmit={this.props.orderUnsubmit}
+        />
       </React.Fragment>
     ) : (
       <PageWrapper center>

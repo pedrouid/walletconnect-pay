@@ -1,10 +1,10 @@
 import * as React from "react";
 import styled from "styled-components";
 import { colors, transitions } from "../styles";
-import Loader from "./Loader";
-import Summary from "./Summary";
+import Loader from "../components/Loader";
+import Summary from "../components/Summary";
 
-import QRCodeDisplay from "./QRCodeDisplay";
+import QRCodeDisplay from "../components/QRCodeDisplay";
 
 import {
   STitle,
@@ -12,7 +12,7 @@ import {
   SColumnFooter,
   SListItemName,
   SListItemDescription
-} from "./common";
+} from "../components/common";
 
 import { IPayment } from "../helpers/types";
 
