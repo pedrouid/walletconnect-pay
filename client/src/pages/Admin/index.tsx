@@ -4,6 +4,9 @@ import { connect } from "react-redux";
 import { Route, Switch, Redirect } from "react-router-dom";
 import Dashboard from "../../layouts/Dashboard";
 import Overview from "./Overview";
+import Inventory from "./Inventory";
+import Orders from "./Orders";
+import Accounting from "./Accounting";
 import Settings from "./Settings";
 
 class Admin extends React.Component<any, any> {
@@ -18,6 +21,13 @@ class Admin extends React.Component<any, any> {
       <Dashboard match={match}>
         <Switch>
           <Route exact path={match.url} component={Overview} />
+          <Route exact path={`${match.url}/inventory`} component={Inventory} />
+          <Route exact path={`${match.url}/orders`} component={Orders} />
+          <Route
+            exact
+            path={`${match.url}/accounting`}
+            component={Accounting}
+          />
           <Route
             exact
             path={`${match.url}/settings`}
