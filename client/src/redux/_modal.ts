@@ -30,10 +30,6 @@ const INITIAL_STATE = {
 };
 
 export default (state = INITIAL_STATE, action: any) => {
-  console.log("\n"); // tslint:disable-line
-  console.log("action.type", action.type); // tslint:disable-line
-  console.log("action.payload", action.payload); // tslint:disable-line
-  console.log("\n"); // tslint:disable-line
   switch (action.type) {
     case MODAL_SHOW:
       return {

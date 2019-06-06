@@ -186,7 +186,6 @@ const SNavigationName = styled.h6<INavigatioNameStyleProps>`
 const Dashboard = (props: any) => {
   const balance = 35245;
   const currency = "USD";
-  // console.log("props.match", props.match); // tslint:disable-line
   return (
     <SWrapper>
       <SSidebar>
@@ -200,8 +199,6 @@ const Dashboard = (props: any) => {
               typeof window !== "undefined"
                 ? sanitizeUrl(window.location.pathname)
                 : "";
-            console.log("pathname", pathname); // tslint:disable-line
-            console.log("current", current); // tslint:disable-line
             const active = current === pathname;
             return (
               <Link
