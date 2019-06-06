@@ -1,18 +1,9 @@
 import * as React from "react";
 import Helmet from "react-helmet";
 import styled from "styled-components";
-
+import { Link } from "react-router-dom";
 import { colors } from "../styles";
 import { IMenuItem, IOrderItem } from "../helpers/types";
-// import {
-//   orderLoadMenu,
-//   orderShowPaymentMethods,
-//   orderChoosePaymentMethod,
-//   orderAddItem,
-//   orderRemoveItem,
-//   orderSubmit,
-//   orderUnsubmit
-// } from "../redux/_order";
 import Button from "../components/Button";
 import Summary from "../components/Summary";
 import ListItem from "../components/ListItem";
@@ -79,10 +70,12 @@ const OrderMenu = (props: any) => {
         />
       </Helmet>
       <SHeader>
-        {businessData.profile.logo && (
-          <SLogo src={businessData.profile.logo} alt="" />
-        )}
-        <SBranding>{businessData.profile.name}</SBranding>
+        <Link style={{ display: "flex" }} to="/admin">
+          {businessData.profile.logo && (
+            <SLogo src={businessData.profile.logo} alt="" />
+          )}
+          <SBranding>{businessData.profile.name}</SBranding>
+        </Link>
       </SHeader>
       <SColumnWrapper>
         <SColumn width={items.length ? ratio : 100}>

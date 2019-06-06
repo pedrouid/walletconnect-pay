@@ -76,6 +76,7 @@ const SContentCard = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  min-height: 100%;
   border-radius: 6px;
   padding: ${CONTENT_PADDING * 2}px ${CONTENT_PADDING}px;
   box-shadow: ${shadows.soft};
@@ -163,6 +164,8 @@ const SNavigation = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  overflow: scroll;
+  padding-bottom: 8%;
 `;
 
 const SNavigationItem = styled.div`
