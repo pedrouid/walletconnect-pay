@@ -12,11 +12,15 @@ const ADMIN_CONNECT_REQUEST = "admin/ADMIN_CONNECT_REQUEST";
 const ADMIN_CONNECT_SUCCESS = "admin/ADMIN_CONNECT_SUCCESS";
 const ADMIN_CONNECT_FAILURE = "admin/ADMIN_CONNECT_FAILURE";
 
-const ADMIN_UPDATE_BUSINESS_PROFILE = "admin/ADMIN_UPDATE_BUSINESS_PROFILE";
-
 const ADMIN_SUBMIT_SIGNUP_REQUEST = "admin/ADMIN_SUBMIT_SIGNUP_REQUEST";
 const ADMIN_SUBMIT_SIGNUP_SUCCESS = "admin/ADMIN_SUBMIT_SIGNUP_SUCCESS";
 const ADMIN_SUBMIT_SIGNUP_FAILURE = "admin/ADMIN_SUBMIT_SIGNUP_FAILURE";
+
+const ADMIN_UPDATE_BUSINESS_PROFILE = "admin/ADMIN_UPDATE_BUSINESS_PROFILE";
+
+const ADMIN_UPDATE_BUSINESS_DATA = "admin/ADMIN_UPDATE_BUSINESS_DATA";
+
+const ADMIN_UPDATE_BUSINESS_MENU = "admin/ADMIN_UPDATE_BUSINESS_MENU";
 
 const ADMIN_CLEAR_STATE = "admin/ADMIN_CLEAR_STATE";
 
@@ -80,6 +84,16 @@ export const adminUpdateBusinessProfile = (
   dispatch({ type: ADMIN_UPDATE_BUSINESS_PROFILE, payload: businessProfile });
 };
 
+export const adminUpdateBusinessData = (businessData: any) => ({
+  type: ADMIN_UPDATE_BUSINESS_DATA,
+  payload: businessData
+});
+
+export const adminUpdateBusinessMenu = (businessMenu: any) => ({
+  type: ADMIN_UPDATE_BUSINESS_MENU,
+  payload: businessMenu
+});
+
 export const adminClearState = () => ({ type: ADMIN_CLEAR_STATE });
 
 // -- Reducer --------------------------------------------------------------- //
@@ -89,6 +103,7 @@ const INITIAL_STATE = {
   address: "",
   chainId: 1,
   businessData: defaultBusinessData,
+  businessMenu: null,
   businessProfile: {
     id: "",
     name: "",
@@ -121,10 +136,19 @@ export default (state = INITIAL_STATE, action: any) => {
         address: action.payload.address || INITIAL_STATE.address,
         chainId: action.payload.chainId || INITIAL_STATE.chainId
       };
+    case ADMIN_SUBMIT_SIGNUP_REQUEST:
+      return { ...state, loading: true };
+    case ADMIN_SUBMIT_SIGNUP_SUCCESS:
+      return { ...state, loading: false, businessData: action.payload };
+    case ADMIN_SUBMIT_SIGNUP_FAILURE:
+      return { ...state, loading: false };
     case ADMIN_UPDATE_BUSINESS_PROFILE:
       return { ...state, businessProfile: action.payload };
-    case ADMIN_SUBMIT_SIGNUP_SUCCESS:
+    case ADMIN_UPDATE_BUSINESS_DATA:
       return { ...state, businessData: action.payload };
+    case ADMIN_UPDATE_BUSINESS_MENU:
+      return { ...state, businessMenu: action.payload };
+
     case ADMIN_CLEAR_STATE:
       return { ...state, ...INITIAL_STATE };
     default:
