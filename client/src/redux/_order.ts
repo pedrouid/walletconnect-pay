@@ -38,7 +38,12 @@ import {
   PAYMENT_PENDING,
   PAYMENT_FAILURE
 } from "../constants/paymentStatus";
-import { adminUpdateBusinessData, adminUpdateBusinessMenu } from "./_admin";
+import {
+  adminUpdateBusinessProfile,
+  adminUpdateBusinessTax,
+  adminUpdateBusinessPayment,
+  adminUpdateBusinessMenu
+} from "./_admin";
 
 // -- Constants ------------------------------------------------------------- //
 
@@ -77,12 +82,16 @@ export const orderLoadDemo = (businessName: string) => (
   if (demo) {
     const { data, menu } = demo;
 
+    const { profile, tax, payment } = data;
+
     const paymentMethod =
-      data.payment.methods.length === 1 ? data.payment.methods[0] : null;
+      payment.methods.length === 1 ? payment.methods[0] : null;
 
-    const paymentAddress = data.payment.address || "";
+    const paymentAddress = payment.address || "";
 
-    dispatch(adminUpdateBusinessData(data));
+    dispatch(adminUpdateBusinessProfile(profile));
+    dispatch(adminUpdateBusinessTax(tax));
+    dispatch(adminUpdateBusinessPayment(payment));
     dispatch(adminUpdateBusinessMenu(menu));
 
     dispatch({
@@ -101,18 +110,15 @@ export const orderLoadDemo = (businessName: string) => (
 };
 
 export const orderLoadMenu = () => (dispatch: any, getState: any) => {
-  const { businessData, businessMenu } = getState().admin;
+  const { businessPayment, businessMenu } = getState().admin;
 
   dispatch({ type: ORDER_LOAD_MENU_REQUEST });
 
   const paymentMethod =
-    businessData.payment.methods.length === 1
-      ? businessData.payment.methods[0]
-      : null;
+    businessPayment.methods.length === 1 ? businessPayment.methods[0] : null;
 
-  const paymentAddress = businessData.payment.address || "";
+  const paymentAddress = businessPayment.address || "";
 
-  dispatch(adminUpdateBusinessData(businessData));
   dispatch(adminUpdateBusinessMenu(businessMenu));
 
   dispatch({
@@ -129,7 +135,7 @@ export const orderAddItem = (item: IMenuItem) => (
   dispatch: any,
   getState: any
 ) => {
-  const { businessData } = getState().admin;
+  const { businessTax } = getState().admin;
   let { items } = getState().order;
   let { rawtotal } = getState().order.checkout;
 
@@ -156,7 +162,7 @@ export const orderAddItem = (item: IMenuItem) => (
     type: ORDER_UPDATE_ITEMS,
     payload: {
       items,
-      checkout: formatCheckoutDetails(rawtotal, businessData.tax)
+      checkout: formatCheckoutDetails(rawtotal, businessTax)
     }
   });
 };
@@ -165,7 +171,7 @@ export const orderRemoveItem = (item: IMenuItem) => (
   dispatch: any,
   getState: any
 ) => {
-  const { businessData } = getState().admin;
+  const { businessTax } = getState().admin;
   let { items } = getState().order;
   let { rawtotal } = getState().order.checkout;
 
@@ -186,7 +192,7 @@ export const orderRemoveItem = (item: IMenuItem) => (
     type: ORDER_UPDATE_ITEMS,
     payload: {
       items,
-      checkout: formatCheckoutDetails(rawtotal, businessData.tax)
+      checkout: formatCheckoutDetails(rawtotal, businessTax)
     }
   });
 };
@@ -214,10 +220,10 @@ export const orderManageSession = (
 };
 
 export const orderShowPaymentMethods = () => (dispatch: any, getState: any) => {
-  const { businessData } = getState().admin;
+  const { businessPayment } = getState().admin;
   const callback = (paymentMethod?: IPaymentMethod) =>
     dispatch(orderChoosePaymentMethod(paymentMethod));
-  dispatch(modalShow(PAYMENT_METHODS_MODAL, { businessData, callback }));
+  dispatch(modalShow(PAYMENT_METHODS_MODAL, { businessPayment, callback }));
 };
 
 export const orderChoosePaymentMethod = (
@@ -325,7 +331,7 @@ export const orderRequestPayment = (account: string, orderId: string) => async (
   dispatch({ type: ORDER_PAYMENT_REQUEST });
 
   try {
-    const { businessData } = getState().admin;
+    const { businessPayment } = getState().admin;
 
     const { checkout, paymentMethod, paymentAddress } = getState().order;
 
@@ -337,7 +343,7 @@ export const orderRequestPayment = (account: string, orderId: string) => async (
       from,
       to,
       amount,
-      businessData.payment.currency,
+      businessPayment.currency,
       paymentMethod.assetSymbol,
       paymentMethod.chainId
     );

@@ -38,10 +38,8 @@ class SignUp extends React.Component<any, ISignUpProps> {
   public static propTypes = {
     adminUpdateBusinessProfile: PropTypes.func.isRequired,
     adminSubmitSignUp: PropTypes.func.isRequired,
-    name: PropTypes.string.isRequired,
-    type: PropTypes.string.isRequired,
-    country: PropTypes.string.isRequired,
-    email: PropTypes.string.isRequired
+    address: PropTypes.string.isRequired,
+    businessProfile: PropTypes.object.isRequired
   };
 
   public componentDidMount() {
@@ -52,7 +50,15 @@ class SignUp extends React.Component<any, ISignUpProps> {
 
   public render() {
     console.log("[SignUp] this.props", this.props); // tslint:disable-line
-    const { name, description, logo, type, country, email, phone } = this.props;
+    const {
+      name,
+      description,
+      logo,
+      type,
+      country,
+      email,
+      phone
+    } = this.props.businessProfile;
     return (
       <PageWrapper>
         <Card shadow margin={20}>
@@ -146,13 +152,7 @@ class SignUp extends React.Component<any, ISignUpProps> {
 
 const reduxProps = (store: any) => ({
   address: store.admin.address,
-  name: store.admin.businessProfile.name,
-  description: store.admin.businessProfile.description,
-  logo: store.admin.businessProfile.logo,
-  type: store.admin.businessProfile.type,
-  country: store.admin.businessProfile.country,
-  email: store.admin.businessProfile.email,
-  phone: store.admin.businessProfile.phone
+  name: store.admin.businessProfile
 });
 
 export default connect(

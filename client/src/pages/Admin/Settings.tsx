@@ -52,18 +52,20 @@ function formatPaymentMethodsDisplay(methods: IPaymentMethod[]): string {
 
 class Settings extends React.Component<any, any> {
   public static propTypes = {
-    businessData: PropTypes.object.isRequired
+    businessProfile: PropTypes.object.isRequired,
+    businessTax: PropTypes.object.isRequired,
+    businessPayment: PropTypes.object.isRequired
   };
 
   public render() {
-    const { profile, tax, payment } = this.props.businessData;
+    const { businessProfile, businessTax, businessPayment } = this.props;
     return (
       <SSettingsWrapper>
         <SSettingsLeft>
           <SLogo>
             <img
-              src={getIpfsUrl(profile.logo)}
-              alt={profile.name}
+              src={getIpfsUrl(businessProfile.logo)}
+              alt={businessProfile.name}
               onError={(event: any) => (event.target.src = picture)}
             />
           </SLogo>
@@ -75,7 +77,7 @@ class Settings extends React.Component<any, any> {
             type="text"
             label="Name"
             placeholder="Crypto Café"
-            value={profile.name}
+            value={businessProfile.name}
             onChange={(e: any) => {
               console.log("[onChange] e.target.value", e.target.value); // tslint:disable-line
               this.setState({ name: e.target.value });
@@ -85,37 +87,39 @@ class Settings extends React.Component<any, any> {
             }
           />
           <SLabel>{"Name"}</SLabel>
-          <SField>{profile.name}</SField>
+          <SField>{businessProfile.name}</SField>
           <SLabel>{"Description"}</SLabel>
-          <SField>{profile.description}</SField>
+          <SField>{businessProfile.description}</SField>
           <SLabel>{"Type"}</SLabel>
-          <SField>{getBusinessType(profile.type)}</SField>
+          <SField>{getBusinessType(businessProfile.type)}</SField>
           <SLabel>{"Country"}</SLabel>
-          <SField>{getCountryName(profile.country)}</SField>
+          <SField>{getCountryName(businessProfile.country)}</SField>
           <SLabel>{"Email"}</SLabel>
-          <SField>{profile.email}</SField>
+          <SField>{businessProfile.email}</SField>
           <SLabel>{"Phone"}</SLabel>
-          <SField>{profile.phone}</SField>
+          <SField>{businessProfile.phone}</SField>
 
           <SSeparator />
 
           <h6>{"Tax"}</h6>
           <SLabel>{"Rate"}</SLabel>
-          <SField>{tax.rate}</SField>
+          <SField>{businessTax.rate}</SField>
           <SLabel>{"Included"}</SLabel>
-          <SField>{capitalize(tax.included.toString())}</SField>
+          <SField>{capitalize(businessTax.included.toString())}</SField>
           <SLabel>{"Display"}</SLabel>
-          <SField>{capitalize(tax.display.toString())}</SField>
+          <SField>{capitalize(businessTax.display.toString())}</SField>
 
           <SSeparator />
 
           <h6>{"Payment"}</h6>
           <SLabel>{"Currency"}</SLabel>
-          <SField>{payment.currency}</SField>
+          <SField>{businessPayment.currency}</SField>
           <SLabel>{"Address"}</SLabel>
-          <SField>{payment.address}</SField>
+          <SField>{businessPayment.address}</SField>
           <SLabel>{"Methods"}</SLabel>
-          <SField>{formatPaymentMethodsDisplay(payment.methods)}</SField>
+          <SField>
+            {formatPaymentMethodsDisplay(businessPayment.methods)}
+          </SField>
         </SSettingsRight>
       </SSettingsWrapper>
     );
@@ -123,7 +127,9 @@ class Settings extends React.Component<any, any> {
 }
 
 const reduxProps = (store: any) => ({
-  businessData: store.admin.businessData
+  businessProfile: store.admin.businessProfile,
+  businessTax: store.admin.businessTax,
+  businessPayment: store.admin.businessPayment
 });
 
 export default connect(

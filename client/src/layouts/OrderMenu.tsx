@@ -47,7 +47,9 @@ const SListItem = styled(ListItem)`
 
 const OrderMenu = (props: any) => {
   const {
-    businessData,
+    businessProfile,
+    businessTax,
+    businessPayment,
     businessMenu,
     items,
     checkout,
@@ -60,10 +62,8 @@ const OrderMenu = (props: any) => {
     <React.Fragment>
       <SHeader>
         <Link style={{ display: "flex" }} to="/admin">
-          {businessData.profile.logo && (
-            <SLogo src={businessData.profile.logo} alt="" />
-          )}
-          <SBranding>{businessData.profile.name}</SBranding>
+          {businessProfile.logo && <SLogo src={businessProfile.logo} alt="" />}
+          <SBranding>{businessProfile.name}</SBranding>
         </Link>
       </SHeader>
       <SColumnWrapper>
@@ -77,7 +77,7 @@ const OrderMenu = (props: any) => {
                 <ListItem
                   key={`menu-${item.name}`}
                   item={item}
-                  businessData={businessData}
+                  businessPayment={businessPayment}
                   onClick={() => onAdd(item)}
                 />
               ))}
@@ -93,7 +93,7 @@ const OrderMenu = (props: any) => {
                 noImage
                 key={`order-${item.name}`}
                 item={item}
-                businessData={businessData}
+                businessPayment={businessPayment}
                 actions={[
                   { label: "Remove", callback: onRemove },
                   { label: "Add", callback: onAdd }
@@ -102,7 +102,11 @@ const OrderMenu = (props: any) => {
             ))}
           </SColumnList>
           <SColumnFooter>
-            <Summary checkout={checkout} businessData={businessData} />
+            <Summary
+              checkout={checkout}
+              businessTax={businessTax}
+              businessPayment={businessPayment}
+            />
             <SColumnRow>
               <Button marginTop={12} onClick={onSubmit}>{`Pay`}</Button>
             </SColumnRow>

@@ -3,8 +3,9 @@ import { queryChainId, formatBusinessId } from "../helpers/utilities";
 import {
   openBusinessBox,
   setBusinessData,
-  defaultBusinessData,
-  defaultBusinessProfile
+  defaultBusinessProfile,
+  defaultBusinessTax,
+  defaultBusinessPayment
 } from "../helpers/business";
 import { modalShow, modalHide } from "./_modal";
 import { notificationShow } from "./_notification";
@@ -21,7 +22,9 @@ const ADMIN_SUBMIT_SIGNUP_FAILURE = "admin/ADMIN_SUBMIT_SIGNUP_FAILURE";
 
 const ADMIN_UPDATE_BUSINESS_PROFILE = "admin/ADMIN_UPDATE_BUSINESS_PROFILE";
 
-const ADMIN_UPDATE_BUSINESS_DATA = "admin/ADMIN_UPDATE_BUSINESS_DATA";
+const ADMIN_UPDATE_BUSINESS_TAX = "admin/ADMIN_UPDATE_BUSINESS_TAX";
+
+const ADMIN_UPDATE_BUSINESS_PAYMENT = "admin/ADMIN_UPDATE_BUSINESS_PAYMENT";
 
 const ADMIN_UPDATE_BUSINESS_MENU = "admin/ADMIN_UPDATE_BUSINESS_MENU";
 
@@ -57,10 +60,19 @@ export const adminConnectWallet = (provider: any) => async (dispatch: any) => {
     console.log("[adminConnectWallet] businessData", businessData); // tslint:disable-line
 
     if (businessData) {
-      const businessProfile = businessData.profile || null;
+      const businessProfile = businessData.profile;
+      const businessTax = businessData.tax;
+      const businessPayment = businessData.payment;
       dispatch({
         type: ADMIN_CONNECT_SUCCESS,
-        payload: { web3, address, chainId, businessData, businessProfile }
+        payload: {
+          web3,
+          address,
+          chainId,
+          businessProfile,
+          businessTax,
+          businessPayment
+        }
       });
       if (window.browserHistory.location.pathname === "/") {
         window.browserHistory.push("/admin");
@@ -106,14 +118,31 @@ export const adminUpdateBusinessProfile = (
     ...updatedBusinessProfile
   };
   businessProfile.id = formatBusinessId(businessProfile.name);
-
   dispatch({ type: ADMIN_UPDATE_BUSINESS_PROFILE, payload: businessProfile });
 };
 
-export const adminUpdateBusinessData = (businessData: any) => ({
-  type: ADMIN_UPDATE_BUSINESS_DATA,
-  payload: businessData
-});
+export const adminUpdateBusinessTax = (updatedBusinessTax: any) => async (
+  dispatch: any,
+  getState: any
+) => {
+  let { businessTax } = getState().admin;
+  businessTax = {
+    ...businessTax,
+    ...updatedBusinessTax
+  };
+  dispatch({ type: ADMIN_UPDATE_BUSINESS_TAX, payload: businessTax });
+};
+
+export const adminUpdateBusinessPayment = (
+  updatedBusinessPayment: any
+) => async (dispatch: any, getState: any) => {
+  let { businessPayment } = getState().admin;
+  businessPayment = {
+    ...businessPayment,
+    ...updatedBusinessPayment
+  };
+  dispatch({ type: ADMIN_UPDATE_BUSINESS_PAYMENT, payload: businessPayment });
+};
 
 export const adminUpdateBusinessMenu = (businessMenu: any) => ({
   type: ADMIN_UPDATE_BUSINESS_MENU,
@@ -128,9 +157,10 @@ const INITIAL_STATE = {
   web3: null,
   address: "",
   chainId: 1,
-  businessData: defaultBusinessData,
   businessMenu: null,
-  businessProfile: defaultBusinessProfile
+  businessProfile: defaultBusinessProfile,
+  businessTax: defaultBusinessTax,
+  businessPayment: defaultBusinessPayment
 };
 
 export default (state = INITIAL_STATE, action: any) => {
@@ -144,8 +174,9 @@ export default (state = INITIAL_STATE, action: any) => {
         web3: action.payload.web3,
         address: action.payload.address,
         chainId: action.payload.chainId,
-        businessData: action.payload.businessData,
-        businessProfile: action.payload.businessProfile || state.businessProfile
+        businessProfile: action.payload.businessProfile,
+        businessTax: action.payload.businessTax,
+        businessPayment: action.payload.businessPayment
       };
     case ADMIN_CONNECT_FAILURE:
       return {
@@ -163,8 +194,10 @@ export default (state = INITIAL_STATE, action: any) => {
       return { ...state, loading: false };
     case ADMIN_UPDATE_BUSINESS_PROFILE:
       return { ...state, businessProfile: action.payload };
-    case ADMIN_UPDATE_BUSINESS_DATA:
-      return { ...state, businessData: action.payload };
+    case ADMIN_UPDATE_BUSINESS_TAX:
+      return { ...state, businessTax: action.payload };
+    case ADMIN_UPDATE_BUSINESS_PAYMENT:
+      return { ...state, businessPayment: action.payload };
     case ADMIN_UPDATE_BUSINESS_MENU:
       return { ...state, businessMenu: action.payload };
     case ADMIN_CLEAR_STATE:
