@@ -1,4 +1,9 @@
-import { IBusinessData } from "../helpers/types";
+import {
+  IBusinessData,
+  IBusinessProfile,
+  IBusinessTax,
+  IBusinessPayment
+} from "../helpers/types";
 import { openBox, openSpace, setSpacePrivate, getSpacePrivate } from "./box";
 import { BUSINESS_DATA } from "../constants/space";
 
@@ -12,27 +17,33 @@ export function getDemoBusiness(bussinessName: string) {
   return result;
 }
 
+export const defaultBusinessProfile: IBusinessProfile = {
+  id: "",
+  name: "",
+  description: "",
+  logo: "",
+  type: "cafe",
+  country: "DE",
+  email: "",
+  phone: ""
+};
+
+export const defaultBusinessTax: IBusinessTax = {
+  rate: 0,
+  included: true,
+  display: false
+};
+
+export const defaultBusinessPayment: IBusinessPayment = {
+  methods: [],
+  currency: "USD",
+  address: ""
+};
+
 export const defaultBusinessData: IBusinessData = {
-  profile: {
-    id: "",
-    name: "",
-    description: "",
-    logo: "",
-    type: "cafe",
-    country: "",
-    email: "",
-    phone: ""
-  },
-  tax: {
-    rate: 0,
-    included: true,
-    display: false
-  },
-  payment: {
-    methods: [],
-    currency: "USD",
-    address: ""
-  }
+  profile: defaultBusinessProfile,
+  tax: defaultBusinessTax,
+  payment: defaultBusinessPayment
 };
 
 export function formatBusinessData(

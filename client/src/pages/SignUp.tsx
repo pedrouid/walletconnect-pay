@@ -50,6 +50,8 @@ class SignUp extends React.Component<any, ISignUpProps> {
   }
 
   public render() {
+    console.log("[SignUp] this.props", this.props); // tslint:disable-line
+    const { name, description, logo, type, country, email, phone } = this.props;
     return (
       <PageWrapper>
         <Card shadow margin={20}>
@@ -57,7 +59,8 @@ class SignUp extends React.Component<any, ISignUpProps> {
 
           <UploadToIpfs
             size={200}
-            label={`Business Logo`}
+            label={`Logo`}
+            image={logo}
             onUpload={(logo: string) =>
               this.props.adminUpdateBusinessProfile({ logo })
             }
@@ -65,18 +68,31 @@ class SignUp extends React.Component<any, ISignUpProps> {
 
           <Input
             type="text"
-            label="Business Name"
+            label="Name"
             placeholder="Crypto Café"
-            value={this.props.name}
+            value={name}
             disabled={false}
             onChange={(e: any) =>
               this.props.adminUpdateBusinessProfile({ name: e.target.value })
             }
           />
 
+          <Input
+            type="text"
+            label="Description"
+            placeholder="Boutique Coffeeshop for Crypto Folks"
+            value={description}
+            disabled={false}
+            onChange={(e: any) =>
+              this.props.adminUpdateBusinessProfile({
+                description: e.target.value
+              })
+            }
+          />
+
           <Dropdown
-            label="Business Type"
-            selected={this.props.type}
+            label="Type"
+            selected={type}
             options={BUSINESS_TYPES}
             displayKey={"display_name"}
             targetKey={"type"}
@@ -89,7 +105,7 @@ class SignUp extends React.Component<any, ISignUpProps> {
             type="email"
             label="Email"
             placeholder="contact@cryptocafe.com"
-            value={this.props.email}
+            value={email}
             disabled={false}
             onChange={(e: any) =>
               this.props.adminUpdateBusinessProfile({ email: e.target.value })
@@ -98,7 +114,7 @@ class SignUp extends React.Component<any, ISignUpProps> {
 
           <Dropdown
             label="Country"
-            selected={this.props.country}
+            selected={country}
             options={COUNTRIES}
             displayKey={"name"}
             targetKey={"code"}
@@ -106,6 +122,18 @@ class SignUp extends React.Component<any, ISignUpProps> {
               this.props.adminUpdateBusinessProfile({ country })
             }
           />
+
+          <Input
+            type="text"
+            label="Phone"
+            placeholder="+49 03054908166"
+            value={phone}
+            disabled={false}
+            onChange={(e: any) =>
+              this.props.adminUpdateBusinessProfile({ phone: e.target.value })
+            }
+          />
+
           <SSubmitWrapper>
             <Button onClick={this.props.adminSubmitSignUp}>{`Submit`}</Button>
           </SSubmitWrapper>
@@ -118,9 +146,12 @@ class SignUp extends React.Component<any, ISignUpProps> {
 const reduxProps = (store: any) => ({
   address: store.admin.address,
   name: store.admin.businessProfile.name,
+  description: store.admin.businessProfile.description,
+  logo: store.admin.businessProfile.logo,
   type: store.admin.businessProfile.type,
   country: store.admin.businessProfile.country,
-  email: store.admin.businessProfile.email
+  email: store.admin.businessProfile.email,
+  phone: store.admin.businessProfile.phone
 });
 
 export default connect(

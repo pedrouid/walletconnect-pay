@@ -73,7 +73,8 @@ class Upload extends React.Component<any, any> {
     onError: PropTypes.func,
     color: PropTypes.string,
     size: PropTypes.number,
-    label: PropTypes.string
+    label: PropTypes.string,
+    image: PropTypes.string
   };
 
   public static defaultProps = {
@@ -97,7 +98,7 @@ class Upload extends React.Component<any, any> {
 
   public state = {
     uploading: false,
-    result: ""
+    result: this.props.image || ""
   };
 
   constructor(props: any) {

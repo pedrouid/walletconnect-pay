@@ -1,9 +1,10 @@
 import Web3 from "web3";
-import { queryChainId } from "../helpers/utilities";
+import { queryChainId, formatBusinessId } from "../helpers/utilities";
 import {
   openBusinessBox,
   setBusinessData,
-  defaultBusinessData
+  defaultBusinessData,
+  defaultBusinessProfile
 } from "../helpers/business";
 import { modalShow, modalHide } from "./_modal";
 import { notificationShow } from "./_notification";
@@ -53,10 +54,13 @@ export const adminConnectWallet = (provider: any) => async (dispatch: any) => {
     const chainId = await queryChainId(web3);
     const businessData = await openBusinessBox(address, provider);
 
+    console.log("[adminConnectWallet] businessData", businessData); // tslint:disable-line
+
     if (businessData) {
+      const businessProfile = businessData.profile || null;
       dispatch({
         type: ADMIN_CONNECT_SUCCESS,
-        payload: { web3, address, chainId, businessData }
+        payload: { web3, address, chainId, businessData, businessProfile }
       });
       if (window.browserHistory.location.pathname === "/") {
         window.browserHistory.push("/admin");
@@ -101,6 +105,8 @@ export const adminUpdateBusinessProfile = (
     ...businessProfile,
     ...updatedBusinessProfile
   };
+  businessProfile.id = formatBusinessId(businessProfile.name);
+
   dispatch({ type: ADMIN_UPDATE_BUSINESS_PROFILE, payload: businessProfile });
 };
 
@@ -124,15 +130,7 @@ const INITIAL_STATE = {
   chainId: 1,
   businessData: defaultBusinessData,
   businessMenu: null,
-  businessProfile: {
-    id: "",
-    name: "",
-    logo: "",
-    type: "cafe",
-    country: "DE",
-    email: "",
-    phone: ""
-  }
+  businessProfile: defaultBusinessProfile
 };
 
 export default (state = INITIAL_STATE, action: any) => {
@@ -146,7 +144,8 @@ export default (state = INITIAL_STATE, action: any) => {
         web3: action.payload.web3,
         address: action.payload.address,
         chainId: action.payload.chainId,
-        businessData: action.payload.businessData
+        businessData: action.payload.businessData,
+        businessProfile: action.payload.businessProfile || state.businessProfile
       };
     case ADMIN_CONNECT_FAILURE:
       return {
@@ -168,7 +167,6 @@ export default (state = INITIAL_STATE, action: any) => {
       return { ...state, businessData: action.payload };
     case ADMIN_UPDATE_BUSINESS_MENU:
       return { ...state, businessMenu: action.payload };
-
     case ADMIN_CLEAR_STATE:
       return { ...state, ...INITIAL_STATE };
     default:

@@ -12,8 +12,8 @@ import {
 } from "../helpers/walletconnect";
 import { formatTransaction } from "../helpers/transaction";
 import {
-  // createOrderJson,
-  // updateOrderJson,
+  createOrderJson,
+  updateOrderJson,
   formatCheckoutDetails,
   defaultCheckoutDetails
 } from "../helpers/order";
@@ -88,6 +88,7 @@ export const orderLoadDemo = (businessName: string) => (
     dispatch({
       type: ORDER_LOAD_MENU_SUCCESS,
       payload: {
+        demo: true,
         paymentMethod,
         paymentAddress
       }
@@ -117,6 +118,7 @@ export const orderLoadMenu = () => (dispatch: any, getState: any) => {
   dispatch({
     type: ORDER_LOAD_MENU_SUCCESS,
     payload: {
+      demo: false,
       paymentMethod,
       paymentAddress
     }
@@ -231,16 +233,17 @@ export const orderChoosePaymentMethod = (
 };
 
 export const orderSubmit = () => async (dispatch: any, getState: any) => {
-  const {
-    // items,
-    // checkout,
-    paymentMethod
-  } = getState().order;
+  const { demo, items, checkout, paymentMethod } = getState().order;
 
   dispatch({ type: ORDER_SUBMIT_REQUEST });
 
-  // const orderId = await createOrderJson({ items, checkout });
-  const orderId = "test-order-id";
+  let orderId = "";
+
+  if (demo) {
+    orderId = "demo-orderId";
+  } else {
+    orderId = await createOrderJson({ items, checkout });
+  }
 
   if (paymentMethod.type === "walletconnect") {
     dispatch(orderSubmitWalletConnect(orderId));
@@ -317,6 +320,8 @@ export const orderRequestPayment = (account: string, orderId: string) => async (
   dispatch: any,
   getState: any
 ) => {
+  const { demo } = getState().order;
+
   dispatch({ type: ORDER_PAYMENT_REQUEST });
 
   try {
@@ -342,7 +347,9 @@ export const orderRequestPayment = (account: string, orderId: string) => async (
     if (txhash) {
       const payment: IPayment = { status: PAYMENT_PENDING, result: txhash };
 
-      // await updateOrderJson(orderId, { payment });
+      if (!demo) {
+        await updateOrderJson(orderId, { payment });
+      }
 
       await dispatch({ type: ORDER_PAYMENT_SUCCESS, payload: payment });
 
@@ -352,14 +359,18 @@ export const orderRequestPayment = (account: string, orderId: string) => async (
     } else {
       const payment: IPayment = { status: PAYMENT_FAILURE, result: null };
 
-      // await updateOrderJson(orderId, { payment });
+      if (!demo) {
+        await updateOrderJson(orderId, { payment });
+      }
 
       dispatch({ type: ORDER_PAYMENT_FAILURE, payload: payment });
     }
   } catch (error) {
     const payment: IPayment = { status: PAYMENT_FAILURE, result: null };
 
-    // await updateOrderJson(orderId, { payment });
+    if (!demo) {
+      await updateOrderJson(orderId, { payment });
+    }
 
     console.error(error); // tslint:disable-line
     dispatch(notificationShow(error.message, true));
@@ -434,6 +445,7 @@ export const orderClearState = () => ({ type: ORDER_CLEAR_STATE });
 
 // -- Reducer --------------------------------------------------------------- //
 const INITIAL_STATE = {
+  demo: false,
   paymentAddress: "",
   paymentMethod: null,
   submitting: false,
@@ -460,6 +472,7 @@ export default (state = INITIAL_STATE, action: any) => {
       return {
         ...state,
         loading: false,
+        demo: action.payload.demo,
         paymentMethod: action.payload.paymentMethod,
         paymentAddress: action.payload.paymentAddress
       };
