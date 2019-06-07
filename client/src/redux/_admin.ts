@@ -5,7 +5,9 @@ import {
   setBusinessData,
   defaultBusinessData
 } from "../helpers/business";
+import { modalShow, modalHide } from "./_modal";
 import { notificationShow } from "./_notification";
+import { ADMIN_AUTHENTICATION_MODAL } from "../constants/modals";
 
 // -- Constants ------------------------------------------------------------- //
 const ADMIN_CONNECT_REQUEST = "admin/ADMIN_CONNECT_REQUEST";
@@ -26,6 +28,22 @@ const ADMIN_CLEAR_STATE = "admin/ADMIN_CLEAR_STATE";
 
 // -- Actions --------------------------------------------------------------- //
 
+export const adminRequestAuthentication = () => async (dispatch: any) =>
+  dispatch(
+    modalShow(
+      ADMIN_AUTHENTICATION_MODAL,
+      {
+        onConnect: (provider: any) => {
+          if (provider) {
+            dispatch(modalHide());
+            dispatch(adminConnectWallet(provider));
+          }
+        }
+      },
+      true
+    )
+  );
+
 export const adminConnectWallet = (provider: any) => async (dispatch: any) => {
   dispatch({ type: ADMIN_CONNECT_REQUEST });
   try {
@@ -40,7 +58,9 @@ export const adminConnectWallet = (provider: any) => async (dispatch: any) => {
         type: ADMIN_CONNECT_SUCCESS,
         payload: { web3, address, chainId, businessData }
       });
-      window.browserHistory.push("/admin");
+      if (window.browserHistory.location.pathname === "/") {
+        window.browserHistory.push("/admin");
+      }
     } else {
       dispatch({
         type: ADMIN_CONNECT_FAILURE,
