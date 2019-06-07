@@ -57,21 +57,17 @@ export const adminConnectWallet = (provider: any) => async (dispatch: any) => {
     const chainId = await queryChainId(web3);
     const businessData = await openBusinessBox(address, provider);
 
-    console.log("[adminConnectWallet] businessData", businessData); // tslint:disable-line
-
     if (businessData) {
-      const businessProfile = businessData.profile;
-      const businessTax = businessData.tax;
-      const businessPayment = businessData.payment;
+      const { profile, tax, payment } = businessData;
       dispatch({
         type: ADMIN_CONNECT_SUCCESS,
         payload: {
           web3,
           address,
           chainId,
-          businessProfile,
-          businessTax,
-          businessPayment
+          profile,
+          tax,
+          payment
         }
       });
       if (window.browserHistory.location.pathname === "/") {
@@ -95,11 +91,16 @@ export const adminSubmitSignUp = () => async (dispatch: any, getState: any) => {
   dispatch({ type: ADMIN_SUBMIT_SIGNUP_REQUEST });
   try {
     const { businessProfile } = getState().admin;
-    const businessData = await setBusinessData({ profile: businessProfile });
+    const { profile, tax, payment } = await setBusinessData({
+      profile: businessProfile
+    });
 
     // await apiSendEmailVerification(businessProfile.email)
 
-    dispatch({ type: ADMIN_SUBMIT_SIGNUP_SUCCESS, payload: businessData });
+    dispatch({
+      type: ADMIN_SUBMIT_SIGNUP_SUCCESS,
+      payload: { profile, tax, payment }
+    });
 
     window.browserHistory.push("/admin");
   } catch (error) {
@@ -174,9 +175,9 @@ export default (state = INITIAL_STATE, action: any) => {
         web3: action.payload.web3,
         address: action.payload.address,
         chainId: action.payload.chainId,
-        businessProfile: action.payload.businessProfile,
-        businessTax: action.payload.businessTax,
-        businessPayment: action.payload.businessPayment
+        businessProfile: action.payload.profile,
+        businessTax: action.payload.tax,
+        businessPayment: action.payload.payment
       };
     case ADMIN_CONNECT_FAILURE:
       return {
@@ -189,7 +190,13 @@ export default (state = INITIAL_STATE, action: any) => {
     case ADMIN_SUBMIT_SIGNUP_REQUEST:
       return { ...state, loading: true };
     case ADMIN_SUBMIT_SIGNUP_SUCCESS:
-      return { ...state, loading: false, businessData: action.payload };
+      return {
+        ...state,
+        loading: false,
+        businessProfile: action.payload.profile,
+        businessTax: action.payload.tax,
+        businessPayment: action.payload.payment
+      };
     case ADMIN_SUBMIT_SIGNUP_FAILURE:
       return { ...state, loading: false };
     case ADMIN_UPDATE_BUSINESS_PROFILE:

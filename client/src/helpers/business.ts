@@ -49,10 +49,23 @@ export const defaultBusinessData: IBusinessData = {
 export function formatBusinessData(
   partialBusinessData: Partial<IBusinessData>
 ): IBusinessData {
-  const businessData: IBusinessData = {
-    ...defaultBusinessData,
-    ...partialBusinessData
+  const profile = {
+    ...defaultBusinessProfile,
+    ...partialBusinessData.profile
   };
+
+  const tax = {
+    ...defaultBusinessTax,
+    ...partialBusinessData.tax
+  };
+
+  const payment = {
+    ...defaultBusinessPayment,
+    ...partialBusinessData.payment
+  };
+
+  const businessData: IBusinessData = { profile, tax, payment };
+
   return businessData;
 }
 

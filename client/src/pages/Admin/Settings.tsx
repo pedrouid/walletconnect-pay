@@ -8,10 +8,15 @@ import {
   getIpfsUrl,
   capitalize
 } from "../../helpers/utilities";
+import { IPaymentMethod } from "../../helpers/types";
 import picture from "../../assets/picture.png";
 import { SField, SLabel, SSeparator } from "../../components/common";
-import { IPaymentMethod } from "../../helpers/types";
 import Input from "../../components/Input";
+import {
+  adminUpdateBusinessProfile,
+  adminUpdateBusinessTax,
+  adminUpdateBusinessPayment
+} from "../../redux/_admin";
 
 const SLogo = styled.div`
   width: 100%;
@@ -78,10 +83,9 @@ class Settings extends React.Component<any, any> {
             label="Name"
             placeholder="Crypto Café"
             value={businessProfile.name}
-            onChange={(e: any) => {
-              console.log("[onChange] e.target.value", e.target.value); // tslint:disable-line
-              this.setState({ name: e.target.value });
-            }}
+            onChange={(e: any) =>
+              this.props.adminUpdateBusinessProfile({ name: e.target.value })
+            }
             onSubmit={
               (value: string) => console.log("[onSubmit] value", value) // tslint:disable-line
             }
@@ -134,5 +138,9 @@ const reduxProps = (store: any) => ({
 
 export default connect(
   reduxProps,
-  null
+  {
+    adminUpdateBusinessProfile,
+    adminUpdateBusinessTax,
+    adminUpdateBusinessPayment
+  }
 )(Settings);
