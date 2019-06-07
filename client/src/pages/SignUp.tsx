@@ -13,6 +13,7 @@ import {
   adminUpdateBusinessProfile,
   adminSubmitSignUp
 } from "../redux/_admin";
+import { getIpfsUrl } from "../helpers/utilities";
 import BUSINESS_TYPES from "../constants/businessTypes";
 import COUNTRIES from "../constants/countries";
 
@@ -60,7 +61,7 @@ class SignUp extends React.Component<any, ISignUpProps> {
           <UploadToIpfs
             size={200}
             label={`Logo`}
-            image={logo}
+            image={getIpfsUrl(logo)}
             onUpload={(logo: string) =>
               this.props.adminUpdateBusinessProfile({ logo })
             }

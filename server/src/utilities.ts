@@ -74,10 +74,14 @@ export function getImageSize (filePath: string): Promise<IImageDimensions> {
       if (err) {
         reject(err)
       }
-      resolve({
-        width: dimensions.width,
-        height: dimensions.height
-      })
+      if (dimensions && dimensions.width && dimensions.height) {
+        resolve({
+          width: dimensions.width,
+          height: dimensions.height
+        })
+      } else {
+        reject(new Error('Failed to get Image Dimensions'))
+      }
     })
   })
 }

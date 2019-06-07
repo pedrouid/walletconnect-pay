@@ -43,6 +43,7 @@ class UploadToIpfs extends React.Component<any, any> {
         image={image}
         apiHandler={this.handleApiUpload}
         onSuccess={this.onUpload}
+        onError={console.error} // tslint:disable-line
       />
     );
   }
