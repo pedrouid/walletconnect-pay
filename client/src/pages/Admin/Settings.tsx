@@ -2,58 +2,30 @@ import * as React from "react";
 import * as PropTypes from "prop-types";
 import { connect } from "react-redux";
 import styled from "styled-components";
-import {
-  getBusinessType,
-  getCountryName,
-  getIpfsUrl,
-  capitalize
-} from "../../helpers/utilities";
-import { IPaymentMethod } from "../../helpers/types";
-import picture from "../../assets/picture.png";
-import { SField, SLabel, SSeparator } from "../../components/common";
+import ProfileForm from "../../components/ProfileForm";
+import Dropdown from "../../components/Dropdown";
+import Toggle from "../../components/Toggle";
 import Input from "../../components/Input";
+import { SField, SLabel, SSeparator } from "../../components/common";
 import {
   adminUpdateBusinessProfile,
   adminUpdateBusinessTax,
   adminUpdateBusinessPayment
 } from "../../redux/_admin";
-
-const SLogo = styled.div`
-  width: 100%;
-  & img {
-    width: 100%;
-    max-width: 150px;
-  }
-`;
+import NATIVE_CURRENCIES from "../../constants/nativeCurrencies";
 
 const SSettingsWrapper = styled.div`
   width: 100%;
-  max-width: 600px;
+  max-width: 1000px;
   display: flex;
 `;
 
 const SSettingsSection = styled.div`
+  width: 100%;
   display: flex;
   flex-direction: column;
   padding: 20px;
 `;
-
-const SSettingsLeft = styled(SSettingsSection)`
-  width: 300px;
-`;
-const SSettingsRight = styled(SSettingsSection)`
-  width: 100%;
-`;
-
-function formatPaymentMethodsDisplay(methods: IPaymentMethod[]): string {
-  let result = "";
-  methods.forEach(method => {
-    const type = capitalize(method.type);
-    const asset = method.assetSymbol.toUpperCase();
-    result += `${type} (${asset}); `;
-  });
-  return result;
-}
 
 class Settings extends React.Component<any, any> {
   public static propTypes = {
@@ -64,67 +36,79 @@ class Settings extends React.Component<any, any> {
 
   public render() {
     const { businessProfile, businessTax, businessPayment } = this.props;
+
     return (
       <SSettingsWrapper>
-        <SSettingsLeft>
-          <SLogo>
-            <img
-              src={getIpfsUrl(businessProfile.logo)}
-              alt={businessProfile.name}
-              onError={(event: any) => (event.target.src = picture)}
-            />
-          </SLogo>
-        </SSettingsLeft>
-        <SSettingsRight>
-          <h6>{"Profile"}</h6>
+        <SSettingsSection>
+          <ProfileForm
+            title={`Profile`}
+            businessProfile={businessProfile}
+            onInputChange={this.props.adminUpdateBusinessProfile}
+          />
+        </SSettingsSection>
+        <SSettingsSection>
+          <h6>{"Tax"}</h6>
           <Input
-            editMode
-            type="text"
-            label="Name"
-            placeholder="Crypto Café"
-            value={businessProfile.name}
+            type="tel"
+            label="Rate"
+            placeholder="20"
+            value={`${businessTax.rate}`}
             onChange={(e: any) =>
-              this.props.adminUpdateBusinessProfile({ name: e.target.value })
-            }
-            onSubmit={
-              (value: string) => console.log("[onSubmit] value", value) // tslint:disable-line
+              this.props.adminUpdateBusinessTax({
+                rate: e.target.value
+              })
             }
           />
-          <SLabel>{"Name"}</SLabel>
-          <SField>{businessProfile.name}</SField>
-          <SLabel>{"Description"}</SLabel>
-          <SField>{businessProfile.description}</SField>
-          <SLabel>{"Type"}</SLabel>
-          <SField>{getBusinessType(businessProfile.type)}</SField>
-          <SLabel>{"Country"}</SLabel>
-          <SField>{getCountryName(businessProfile.country)}</SField>
-          <SLabel>{"Email"}</SLabel>
-          <SField>{businessProfile.email}</SField>
-          <SLabel>{"Phone"}</SLabel>
-          <SField>{businessProfile.phone}</SField>
-
-          <SSeparator />
-
-          <h6>{"Tax"}</h6>
-          <SLabel>{"Rate"}</SLabel>
-          <SField>{businessTax.rate}</SField>
           <SLabel>{"Included"}</SLabel>
-          <SField>{capitalize(businessTax.included.toString())}</SField>
+          <Toggle
+            color={`lightBlue`}
+            active={businessTax.included}
+            onClick={() =>
+              this.props.adminUpdateBusinessTax({
+                included: !businessTax.included
+              })
+            }
+          />
           <SLabel>{"Display"}</SLabel>
-          <SField>{capitalize(businessTax.display.toString())}</SField>
+          <Toggle
+            color={`lightBlue`}
+            active={businessTax.display}
+            onClick={() =>
+              this.props.adminUpdateBusinessTax({
+                display: !businessTax.display
+              })
+            }
+          />
 
           <SSeparator />
 
           <h6>{"Payment"}</h6>
-          <SLabel>{"Currency"}</SLabel>
-          <SField>{businessPayment.currency}</SField>
-          <SLabel>{"Address"}</SLabel>
-          <SField>{businessPayment.address}</SField>
+          <Dropdown
+            label="Currency"
+            selected={businessPayment.currency}
+            options={NATIVE_CURRENCIES}
+            displayKey={"currency"}
+            targetKey={"currency"}
+            onChange={(currency: string) =>
+              this.props.adminUpdateBusinessPayment({
+                currency
+              })
+            }
+          />
+          <Input
+            type="text"
+            label="ETH Address"
+            placeholder="0x0000000000000000000000000000000000000000"
+            value={businessPayment.address}
+            onChange={(e: any) =>
+              this.props.adminUpdateBusinessPayment({
+                address: e.target.value
+              })
+            }
+          />
           <SLabel>{"Methods"}</SLabel>
-          <SField>
-            {formatPaymentMethodsDisplay(businessPayment.methods)}
-          </SField>
-        </SSettingsRight>
+          <SField>{businessPayment.methods.toString()}</SField>
+        </SSettingsSection>
       </SSettingsWrapper>
     );
   }

@@ -1,29 +1,14 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
-import styled from "styled-components";
 import { connect } from "react-redux";
 import PageWrapper from "../components/PageWrapper";
 import Card from "../components/Card";
-import Input from "../components/Input";
-import Button from "../components/Button";
-import Dropdown from "../components/Dropdown";
-import UploadToIpfs from "../components/UploadToIpfs";
 import {
   adminRequestAuthentication,
   adminUpdateBusinessProfile,
   adminSubmitSignUp
 } from "../redux/_admin";
-import { getIpfsUrl } from "../helpers/utilities";
-import BUSINESS_TYPES from "../constants/businessTypes";
-import COUNTRIES from "../constants/countries";
-
-const SSubmitWrapper = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-content: center;
-  margin-top: 24px;
-`;
+import ProfileForm from "../components/ProfileForm";
 
 interface ISignUpProps {
   adminUpdateBusinessProfile: (updatedBusinessProfile: any) => void;
@@ -49,101 +34,15 @@ class SignUp extends React.Component<any, ISignUpProps> {
   }
 
   public render() {
-    console.log("[SignUp] this.props", this.props); // tslint:disable-line
-    const {
-      name,
-      description,
-      logo,
-      type,
-      country,
-      email,
-      phone
-    } = this.props.businessProfile;
     return (
       <PageWrapper>
         <Card shadow margin={20}>
-          {/* <h4>{`Sign Up`}</h4> */}
-
-          <UploadToIpfs
-            size={200}
-            label={`Logo`}
-            image={getIpfsUrl(logo)}
-            onUpload={(logo: string) =>
-              this.props.adminUpdateBusinessProfile({ logo })
-            }
+          <ProfileForm
+            title={`Sign Up`}
+            businessProfile={this.props.businessProfile}
+            onInputChange={this.props.adminUpdateBusinessProfile}
+            onSubmit={this.props.adminSubmitSignUp}
           />
-
-          <Input
-            type="text"
-            label="Name"
-            placeholder="Crypto Café"
-            value={name}
-            disabled={false}
-            onChange={(e: any) =>
-              this.props.adminUpdateBusinessProfile({ name: e.target.value })
-            }
-          />
-
-          <Input
-            type="text"
-            label="Description"
-            placeholder="Boutique Coffeeshop for Crypto Folks"
-            value={description}
-            disabled={false}
-            onChange={(e: any) =>
-              this.props.adminUpdateBusinessProfile({
-                description: e.target.value
-              })
-            }
-          />
-
-          <Dropdown
-            label="Type"
-            selected={type}
-            options={BUSINESS_TYPES}
-            displayKey={"display_name"}
-            targetKey={"type"}
-            onChange={(type: string) =>
-              this.props.adminUpdateBusinessProfile({ type })
-            }
-          />
-
-          <Input
-            type="email"
-            label="Email"
-            placeholder="contact@cryptocafe.com"
-            value={email}
-            disabled={false}
-            onChange={(e: any) =>
-              this.props.adminUpdateBusinessProfile({ email: e.target.value })
-            }
-          />
-
-          <Dropdown
-            label="Country"
-            selected={country}
-            options={COUNTRIES}
-            displayKey={"name"}
-            targetKey={"code"}
-            onChange={(country: string) =>
-              this.props.adminUpdateBusinessProfile({ country })
-            }
-          />
-
-          <Input
-            type="text"
-            label="Phone"
-            placeholder="+49 03054908166"
-            value={phone}
-            disabled={false}
-            onChange={(e: any) =>
-              this.props.adminUpdateBusinessProfile({ phone: e.target.value })
-            }
-          />
-
-          <SSubmitWrapper>
-            <Button onClick={this.props.adminSubmitSignUp}>{`Submit`}</Button>
-          </SSubmitWrapper>
         </Card>
       </PageWrapper>
     );

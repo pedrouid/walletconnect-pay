@@ -5,6 +5,7 @@ import { SLabel } from "./common";
 import Icon from "./Icon";
 import editIcon from "../assets/edit.svg";
 import { colors, fonts, shadows, transitions } from "../styles";
+import ClickOutside from "./ClickOutside";
 
 interface IInputWrapperStyleProps {
   disabled: boolean;
@@ -19,6 +20,8 @@ const SEditIcon = styled(Icon)`
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
+  bottom: 6px;
+  mask-size: 90%;
 `;
 
 const SInputWrapper = styled.div<IInputWrapperStyleProps>`
@@ -28,6 +31,15 @@ const SInputWrapper = styled.div<IInputWrapperStyleProps>`
   justify-content: flex-end;
   width: 100%;
   opacity: ${({ disabled }) => (disabled ? "0.5" : "1")};
+
+  & > div {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    width: 100%;
+    height: 100%;
+  }
 
   @media (hover: hover) {
     &:hover ${SEditIcon} {
@@ -46,6 +58,7 @@ interface IInputStyleProps {
 const SInput = styled.input<IInputStyleProps>`
   width: 100%;
   background: rgb(${colors.white});
+  color: rgb(${colors.dark});
   padding: 10px 14px;
   padding: ${({ readOnly }) => (!readOnly ? "10px 14px" : "6px 0")};
   border: none;
@@ -121,11 +134,21 @@ class Input extends React.Component<any, any> {
 
   public subscribeToKeyUp = (event: KeyboardEvent) => {
     if (event.key === "Enter") {
-      this.toggleEditing();
-      if (this.input) {
-        this.props.onSubmit(this.input.value);
+      if (this.state.editing) {
+        this.toggleEditing();
       }
+      this.onSubmit();
     }
+  };
+
+  public onSubmit = () => {
+    if (this.props.onSubmit) {
+      this.props.onSubmit();
+    }
+  };
+
+  public onClickOutside = () => {
+    this.onSubmit();
   };
 
   public componentWillUnmount() {
@@ -171,23 +194,26 @@ class Input extends React.Component<any, any> {
     const readOnly = editMode && !this.state.editing;
     return (
       <SInputWrapper disabled={disabled} readOnly={readOnly}>
-        {_label !== "Input" && <SLabel>{_label}</SLabel>}
-        <SInput
-          readOnly={readOnly}
-          disabled={disabled || readOnly}
-          type={type}
-          value={!disabled ? value : ""}
-          placeholder={_placeholder}
-          monospace={monospace}
-          {...props}
-        />
-        {children}
-        <SEditIcon
-          size={25}
-          icon={editIcon}
-          color="lightGrey"
-          onClick={this.toggleEditing}
-        />
+        <ClickOutside onClickOutside={this.onClickOutside}>
+          {_label !== "Input" && <SLabel>{_label}</SLabel>}
+          <SInput
+            ref={this.inputRef}
+            readOnly={readOnly}
+            disabled={disabled || readOnly}
+            type={type}
+            value={!disabled ? value : ""}
+            placeholder={_placeholder}
+            monospace={monospace}
+            {...props}
+          />
+          {children}
+          <SEditIcon
+            size={25}
+            icon={editIcon}
+            color="dark"
+            onClick={this.toggleEditing}
+          />
+        </ClickOutside>
       </SInputWrapper>
     );
   }

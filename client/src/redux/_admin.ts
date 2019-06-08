@@ -1,12 +1,18 @@
 import Web3 from "web3";
 import { queryChainId, formatBusinessId } from "../helpers/utilities";
 import {
+  IBusinessProfile,
+  IBusinessTax,
+  IBusinessPayment
+} from "../helpers/types";
+import {
   openBusinessBox,
   setBusinessData,
   defaultBusinessProfile,
   defaultBusinessTax,
   defaultBusinessPayment
 } from "../helpers/business";
+import { isNaN } from "../helpers/bignumber";
 import { modalShow, modalHide } from "./_modal";
 import { notificationShow } from "./_notification";
 import { ADMIN_AUTHENTICATION_MODAL } from "../constants/modals";
@@ -111,7 +117,7 @@ export const adminSubmitSignUp = () => async (dispatch: any, getState: any) => {
 };
 
 export const adminUpdateBusinessProfile = (
-  updatedBusinessProfile: any
+  updatedBusinessProfile: Partial<IBusinessProfile>
 ) => async (dispatch: any, getState: any) => {
   let { businessProfile } = getState().admin;
   businessProfile = {
@@ -122,10 +128,13 @@ export const adminUpdateBusinessProfile = (
   dispatch({ type: ADMIN_UPDATE_BUSINESS_PROFILE, payload: businessProfile });
 };
 
-export const adminUpdateBusinessTax = (updatedBusinessTax: any) => async (
-  dispatch: any,
-  getState: any
-) => {
+export const adminUpdateBusinessTax = (
+  updatedBusinessTax: Partial<IBusinessTax>
+) => async (dispatch: any, getState: any) => {
+  console.log(updatedBusinessTax.rate); // tslint:disable-line
+  if (updatedBusinessTax.rate && isNaN(updatedBusinessTax.rate)) {
+    return;
+  }
   let { businessTax } = getState().admin;
   businessTax = {
     ...businessTax,
@@ -135,7 +144,7 @@ export const adminUpdateBusinessTax = (updatedBusinessTax: any) => async (
 };
 
 export const adminUpdateBusinessPayment = (
-  updatedBusinessPayment: any
+  updatedBusinessPayment: Partial<IBusinessPayment>
 ) => async (dispatch: any, getState: any) => {
   let { businessPayment } = getState().admin;
   businessPayment = {
