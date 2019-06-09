@@ -5,7 +5,6 @@ import { SLabel } from "./common";
 import Icon from "./Icon";
 import editIcon from "../assets/edit.svg";
 import { colors, fonts, shadows, transitions } from "../styles";
-import ClickOutside from "./ClickOutside";
 
 interface IInputWrapperStyleProps {
   disabled: boolean;
@@ -31,15 +30,6 @@ const SInputWrapper = styled.div<IInputWrapperStyleProps>`
   justify-content: flex-end;
   width: 100%;
   opacity: ${({ disabled }) => (disabled ? "0.5" : "1")};
-
-  & > div {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    width: 100%;
-    height: 100%;
-  }
 
   @media (hover: hover) {
     &:hover ${SEditIcon} {
@@ -127,6 +117,7 @@ class Input extends React.Component<any, any> {
   public componentDidMount() {
     if (this.input) {
       this.input.addEventListener("keyup", this.subscribeToKeyUp);
+      this.input.addEventListener("blur", this.onBlur);
     }
   }
 
@@ -136,6 +127,9 @@ class Input extends React.Component<any, any> {
     if (event.key === "Enter") {
       if (this.state.editing) {
         this.toggleEditing();
+      }
+      if (this.input) {
+        this.input.blur();
       }
       this.onSubmit();
     }
@@ -147,13 +141,14 @@ class Input extends React.Component<any, any> {
     }
   };
 
-  public onClickOutside = () => {
+  public onBlur = () => {
     this.onSubmit();
   };
 
   public componentWillUnmount() {
     if (this.input) {
       this.input.removeEventListener("keyup", this.subscribeToKeyUp);
+      this.input.removeEventListener("blur", this.onBlur);
     }
   }
 
@@ -194,26 +189,24 @@ class Input extends React.Component<any, any> {
     const readOnly = editMode && !this.state.editing;
     return (
       <SInputWrapper disabled={disabled} readOnly={readOnly}>
-        <ClickOutside onClickOutside={this.onClickOutside}>
-          {_label !== "Input" && <SLabel>{_label}</SLabel>}
-          <SInput
-            ref={this.inputRef}
-            readOnly={readOnly}
-            disabled={disabled || readOnly}
-            type={type}
-            value={!disabled ? value : ""}
-            placeholder={_placeholder}
-            monospace={monospace}
-            {...props}
-          />
-          {children}
-          <SEditIcon
-            size={25}
-            icon={editIcon}
-            color="dark"
-            onClick={this.toggleEditing}
-          />
-        </ClickOutside>
+        {_label !== "Input" && <SLabel>{_label}</SLabel>}
+        <SInput
+          ref={this.inputRef}
+          readOnly={readOnly}
+          disabled={disabled || readOnly}
+          type={type}
+          value={!disabled ? value : ""}
+          placeholder={_placeholder}
+          monospace={monospace}
+          {...props}
+        />
+        {children}
+        <SEditIcon
+          size={25}
+          icon={editIcon}
+          color="dark"
+          onClick={this.toggleEditing}
+        />
       </SInputWrapper>
     );
   }

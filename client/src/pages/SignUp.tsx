@@ -51,7 +51,7 @@ class SignUp extends React.Component<any, ISignUpProps> {
 
 const reduxProps = (store: any) => ({
   address: store.admin.address,
-  name: store.admin.businessProfile
+  businessProfile: store.admin.businessProfile
 });
 
 export default connect(

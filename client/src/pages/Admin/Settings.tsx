@@ -10,7 +10,8 @@ import { SField, SLabel, SSeparator } from "../../components/common";
 import {
   adminUpdateBusinessProfile,
   adminUpdateBusinessTax,
-  adminUpdateBusinessPayment
+  adminUpdateBusinessPayment,
+  adminSaveBusinessData
 } from "../../redux/_admin";
 import NATIVE_CURRENCIES from "../../constants/nativeCurrencies";
 
@@ -36,7 +37,6 @@ class Settings extends React.Component<any, any> {
 
   public render() {
     const { businessProfile, businessTax, businessPayment } = this.props;
-
     return (
       <SSettingsWrapper>
         <SSettingsSection>
@@ -44,6 +44,7 @@ class Settings extends React.Component<any, any> {
             title={`Profile`}
             businessProfile={businessProfile}
             onInputChange={this.props.adminUpdateBusinessProfile}
+            onInputSubmit={this.props.adminSaveBusinessData}
           />
         </SSettingsSection>
         <SSettingsSection>
@@ -58,26 +59,29 @@ class Settings extends React.Component<any, any> {
                 rate: e.target.value
               })
             }
+            onSubmit={this.props.adminSaveBusinessData}
           />
           <SLabel>{"Included"}</SLabel>
           <Toggle
             color={`lightBlue`}
             active={businessTax.included}
-            onClick={() =>
+            onClick={() => {
               this.props.adminUpdateBusinessTax({
                 included: !businessTax.included
-              })
-            }
+              });
+              this.props.adminSaveBusinessData();
+            }}
           />
           <SLabel>{"Display"}</SLabel>
           <Toggle
             color={`lightBlue`}
             active={businessTax.display}
-            onClick={() =>
+            onClick={() => {
               this.props.adminUpdateBusinessTax({
                 display: !businessTax.display
-              })
-            }
+              });
+              this.props.adminSaveBusinessData();
+            }}
           />
 
           <SSeparator />
@@ -89,15 +93,17 @@ class Settings extends React.Component<any, any> {
             options={NATIVE_CURRENCIES}
             displayKey={"currency"}
             targetKey={"currency"}
-            onChange={(currency: string) =>
+            onChange={(currency: string) => {
               this.props.adminUpdateBusinessPayment({
                 currency
-              })
-            }
+              });
+              this.props.adminSaveBusinessData();
+            }}
           />
           <Input
             type="text"
             label="ETH Address"
+            autoComplete={"off"}
             placeholder="0x0000000000000000000000000000000000000000"
             value={businessPayment.address}
             onChange={(e: any) =>
@@ -105,6 +111,7 @@ class Settings extends React.Component<any, any> {
                 address: e.target.value
               })
             }
+            onSubmit={this.props.adminSaveBusinessData}
           />
           <SLabel>{"Methods"}</SLabel>
           <SField>{businessPayment.methods.toString()}</SField>
@@ -125,6 +132,7 @@ export default connect(
   {
     adminUpdateBusinessProfile,
     adminUpdateBusinessTax,
-    adminUpdateBusinessPayment
+    adminUpdateBusinessPayment,
+    adminSaveBusinessData
   }
 )(Settings);

@@ -29,15 +29,21 @@ export const defaultBusinessProfile: IBusinessProfile = {
 };
 
 export const defaultBusinessTax: IBusinessTax = {
-  rate: 0,
+  rate: 20,
   included: true,
-  display: false
+  display: true
 };
 
 export const defaultBusinessPayment: IBusinessPayment = {
-  methods: [],
   currency: "USD",
-  address: ""
+  address: "",
+  methods: [
+    {
+      type: "walletconnect",
+      chainId: 1,
+      assetSymbol: "DAI"
+    }
+  ]
 };
 
 export const defaultBusinessData: IBusinessData = {

@@ -1,5 +1,9 @@
 import Web3 from "web3";
-import { queryChainId, formatBusinessId } from "../helpers/utilities";
+import {
+  queryChainId,
+  formatBusinessId,
+  sanitizeUrl
+} from "../helpers/utilities";
 import {
   IBusinessProfile,
   IBusinessTax,
@@ -16,6 +20,7 @@ import { isNaN } from "../helpers/bignumber";
 import { modalShow, modalHide } from "./_modal";
 import { notificationShow } from "./_notification";
 import { ADMIN_AUTHENTICATION_MODAL } from "../constants/modals";
+import { logRedux } from "src/helpers/dev";
 
 // -- Constants ------------------------------------------------------------- //
 const ADMIN_CONNECT_REQUEST = "admin/ADMIN_CONNECT_REQUEST";
@@ -25,6 +30,13 @@ const ADMIN_CONNECT_FAILURE = "admin/ADMIN_CONNECT_FAILURE";
 const ADMIN_SUBMIT_SIGNUP_REQUEST = "admin/ADMIN_SUBMIT_SIGNUP_REQUEST";
 const ADMIN_SUBMIT_SIGNUP_SUCCESS = "admin/ADMIN_SUBMIT_SIGNUP_SUCCESS";
 const ADMIN_SUBMIT_SIGNUP_FAILURE = "admin/ADMIN_SUBMIT_SIGNUP_FAILURE";
+
+const ADMIN_SAVE_BUSINESS_DATA_REQUEST =
+  "admin/ADMIN_SAVE_BUSINESS_DATA_REQUEST";
+const ADMIN_SAVE_BUSINESS_DATA_SUCCESS =
+  "admin/ADMIN_SAVE_BUSINESS_DATA_SUCCESS";
+const ADMIN_SAVE_BUSINESS_DATA_FAILURE =
+  "admin/ADMIN_SAVE_BUSINESS_DATA_FAILURE";
 
 const ADMIN_UPDATE_BUSINESS_PROFILE = "admin/ADMIN_UPDATE_BUSINESS_PROFILE";
 
@@ -54,7 +66,10 @@ export const adminRequestAuthentication = () => async (dispatch: any) =>
     )
   );
 
-export const adminConnectWallet = (provider: any) => async (dispatch: any) => {
+export const adminConnectWallet = (provider: any) => async (
+  dispatch: any,
+  getState: any
+) => {
   dispatch({ type: ADMIN_CONNECT_REQUEST });
   try {
     const web3 = new Web3(provider);
@@ -76,13 +91,26 @@ export const adminConnectWallet = (provider: any) => async (dispatch: any) => {
           payment
         }
       });
-      if (window.browserHistory.location.pathname === "/") {
+      const pathname = sanitizeUrl(window.browserHistory.location.pathname);
+      if (["/", "/signup"].includes(pathname)) {
         window.browserHistory.push("/admin");
       }
     } else {
+      const {
+        businessProfile,
+        businessTax,
+        businessPayment
+      } = getState().admin;
       dispatch({
-        type: ADMIN_CONNECT_FAILURE,
-        payload: { web3, address, chainId }
+        type: ADMIN_CONNECT_SUCCESS,
+        payload: {
+          web3,
+          address,
+          chainId,
+          profile: businessProfile,
+          tax: businessTax,
+          payment: businessPayment
+        }
       });
       window.browserHistory.push("/signup");
     }
@@ -116,6 +144,38 @@ export const adminSubmitSignUp = () => async (dispatch: any, getState: any) => {
   }
 };
 
+export const adminSaveBusinessData = () => async (
+  dispatch: any,
+  getState: any
+) => {
+  const {
+    address,
+    businessProfile,
+    businessTax,
+    businessPayment
+  } = getState().admin;
+  if (!address) {
+    return;
+  }
+  dispatch({ type: ADMIN_SAVE_BUSINESS_DATA_REQUEST });
+  try {
+    const { profile, tax, payment } = await setBusinessData({
+      profile: businessProfile,
+      tax: businessTax,
+      payment: businessPayment
+    });
+
+    dispatch({
+      type: ADMIN_SAVE_BUSINESS_DATA_SUCCESS,
+      payload: { profile, tax, payment }
+    });
+  } catch (error) {
+    console.error(error); // tslint:disable-line
+    dispatch(notificationShow(error.message, true));
+    dispatch({ type: ADMIN_SAVE_BUSINESS_DATA_FAILURE });
+  }
+};
+
 export const adminUpdateBusinessProfile = (
   updatedBusinessProfile: Partial<IBusinessProfile>
 ) => async (dispatch: any, getState: any) => {
@@ -131,7 +191,6 @@ export const adminUpdateBusinessProfile = (
 export const adminUpdateBusinessTax = (
   updatedBusinessTax: Partial<IBusinessTax>
 ) => async (dispatch: any, getState: any) => {
-  console.log(updatedBusinessTax.rate); // tslint:disable-line
   if (updatedBusinessTax.rate && isNaN(updatedBusinessTax.rate)) {
     return;
   }
@@ -174,6 +233,8 @@ const INITIAL_STATE = {
 };
 
 export default (state = INITIAL_STATE, action: any) => {
+  // TODO: DELETE THIS
+  logRedux(action);
   switch (action.type) {
     case ADMIN_CONNECT_REQUEST:
       return { ...state, loading: true };
@@ -184,18 +245,12 @@ export default (state = INITIAL_STATE, action: any) => {
         web3: action.payload.web3,
         address: action.payload.address,
         chainId: action.payload.chainId,
-        businessProfile: action.payload.profile,
-        businessTax: action.payload.tax,
-        businessPayment: action.payload.payment
+        businessProfile: action.payload.profile || defaultBusinessProfile,
+        businessTax: action.payload.tax || defaultBusinessTax,
+        businessPayment: action.payload.payment || defaultBusinessPayment
       };
     case ADMIN_CONNECT_FAILURE:
-      return {
-        ...state,
-        loading: false,
-        web3: action.payload.web3 || INITIAL_STATE.web3,
-        address: action.payload.address || INITIAL_STATE.address,
-        chainId: action.payload.chainId || INITIAL_STATE.chainId
-      };
+      return { ...state, loading: false };
     case ADMIN_SUBMIT_SIGNUP_REQUEST:
       return { ...state, loading: true };
     case ADMIN_SUBMIT_SIGNUP_SUCCESS:
@@ -208,6 +263,14 @@ export default (state = INITIAL_STATE, action: any) => {
       };
     case ADMIN_SUBMIT_SIGNUP_FAILURE:
       return { ...state, loading: false };
+    case ADMIN_SAVE_BUSINESS_DATA_SUCCESS:
+      return {
+        ...state,
+        businessProfile: action.payload.profile,
+        businessTax: action.payload.tax,
+        businessPayment: action.payload.payment
+      };
+
     case ADMIN_UPDATE_BUSINESS_PROFILE:
       return { ...state, businessProfile: action.payload };
     case ADMIN_UPDATE_BUSINESS_TAX:
