@@ -21,7 +21,11 @@ import { getDemoBusiness } from "../helpers/business";
 import { notificationShow } from "./_notification";
 import { modalShow, modalHide } from "./_modal";
 import { apiGetTransactionReceipt } from "../helpers/api";
-import { convertHexToNumber } from "../helpers/bignumber";
+import {
+  convertStringToNumber,
+  convertHexToNumber,
+  add
+} from "../helpers/bignumber";
 import { getChainData } from "../helpers/utilities";
 import {
   PAYMENT_METHODS_MODAL,
@@ -131,10 +135,10 @@ export const orderAddItem = (item: IMenuItem) => (
   let newItem = true;
 
   items = items.map((orderItem: IOrderItem) => {
-    if (orderItem.name === item.name) {
+    if (orderItem.id === item.id) {
       newItem = false;
-      orderItem.quantity += 1;
-      rawtotal += item.price;
+      orderItem.quantity = convertStringToNumber(add(orderItem.quantity, 1));
+      rawtotal = convertStringToNumber(add(rawtotal, item.price));
     }
     return orderItem;
   });
@@ -144,7 +148,7 @@ export const orderAddItem = (item: IMenuItem) => (
       ...item,
       quantity: 1
     });
-    rawtotal += item.price;
+    rawtotal = convertStringToNumber(add(rawtotal, item.price));
   }
 
   dispatch({

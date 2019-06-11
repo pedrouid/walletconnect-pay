@@ -30,9 +30,12 @@ export function formatCheckoutDetails(
 ): ICheckoutDetails {
   let checkout;
   const _rawtotal = convertNumberToString(rawtotal);
+  console.log("[formatCheckoutDetails] _rawtotal", _rawtotal); // tslint:disable-line
   const tax = multiply(_rawtotal, divide(businessTax.rate, 100));
+  console.log("[formatCheckoutDetails] tax", tax); // tslint:disable-line
   if (businessTax.included) {
     const _subtotal = subtract(_rawtotal, tax);
+    console.log("[formatCheckoutDetails] _subtotal", _subtotal); // tslint:disable-line
     checkout = {
       rawtotal: convertStringToNumber(_rawtotal),
       subtotal: convertStringToNumber(_subtotal),
@@ -41,6 +44,7 @@ export function formatCheckoutDetails(
     };
   } else {
     const _nettotal = add(_rawtotal, tax);
+    console.log("[formatCheckoutDetails] _nettotal", _nettotal); // tslint:disable-line
     checkout = {
       rawtotal: convertStringToNumber(_rawtotal),
       subtotal: convertStringToNumber(_rawtotal),
