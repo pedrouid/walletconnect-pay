@@ -52,8 +52,7 @@ class Demo extends React.Component<any, any> {
   public render() {
     const {
       businessProfile,
-      businessTax,
-      businessPayment,
+      businessSettings,
       businessMenu,
       paymentMethod,
       loading,
@@ -69,8 +68,7 @@ class Demo extends React.Component<any, any> {
         <OrderMenu
           loading={loading}
           businessProfile={businessProfile}
-          businessTax={businessTax}
-          businessPayment={businessPayment}
+          businessSettings={businessSettings}
           businessMenu={businessMenu}
           items={items}
           checkout={checkout}
@@ -80,8 +78,7 @@ class Demo extends React.Component<any, any> {
         />
         <Checkout
           loading={loading}
-          businessTax={businessTax}
-          businessPayment={businessPayment}
+          businessSettings={businessSettings}
           submitted={submitted}
           payment={payment}
           paymentMethod={paymentMethod}
@@ -101,8 +98,7 @@ class Demo extends React.Component<any, any> {
 
 const reduxProps = (store: any) => ({
   businessProfile: store.demo.businessProfile,
-  businessTax: store.demo.businessTax,
-  businessPayment: store.demo.businessPayment,
+  businessSettings: store.demo.businessSettings,
   businessMenu: store.demo.businessMenu,
   paymentMethod: store.order.paymentMethod,
   loading: store.order.loading,

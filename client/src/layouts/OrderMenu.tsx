@@ -51,8 +51,7 @@ const OrderMenu = (props: any) => {
   const {
     loading,
     businessProfile,
-    businessTax,
-    businessPayment,
+    businessSettings,
     businessMenu,
     items,
     checkout,
@@ -60,6 +59,8 @@ const OrderMenu = (props: any) => {
     onAdd,
     onRemove
   } = props;
+  console.log("[OrderMenu] businessProfile", businessProfile); // tslint:disable-line
+  console.log("[OrderMenu] businessSettings", businessSettings); // tslint:disable-line
   return (
     <React.Fragment>
       <SHeader>
@@ -82,7 +83,7 @@ const OrderMenu = (props: any) => {
                   <ListItem
                     key={`menu-${item.name}`}
                     item={item}
-                    businessPayment={businessPayment}
+                    businessSettings={businessSettings}
                     onClick={() => onAdd(item)}
                   />
                 ))}
@@ -102,7 +103,7 @@ const OrderMenu = (props: any) => {
                   noImage
                   key={`order-${item.name}`}
                   item={item}
-                  businessPayment={businessPayment}
+                  businessSettings={businessSettings}
                   actions={[
                     { label: "Remove", callback: onRemove },
                     { label: "Add", callback: onAdd }
@@ -114,11 +115,7 @@ const OrderMenu = (props: any) => {
             <EmptyState loading={loading} />
           )}
           <SColumnFooter>
-            <Summary
-              checkout={checkout}
-              businessTax={businessTax}
-              businessPayment={businessPayment}
-            />
+            <Summary checkout={checkout} businessSettings={businessSettings} />
             <SColumnRow>
               <Button marginTop={12} onClick={onSubmit}>{`Pay`}</Button>
             </SColumnRow>

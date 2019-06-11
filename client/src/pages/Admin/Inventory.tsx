@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import {
   IMenuItem,
   IBusinessMenu,
-  IBusinessPayment
+  IBusinessSettings
 } from "../../helpers/types";
 import { adminShowInventoryModal } from "../../redux/_admin";
 import ListItem from "../../components/ListItem";
@@ -25,12 +25,14 @@ const SListItem = styled(ListItem)`
 
 interface IInventoryProps {
   businessMenu: IBusinessMenu;
-  businessPayment: IBusinessPayment;
+  businessSettings: IBusinessSettings;
   adminShowInventoryModal: (menuItem?: IMenuItem) => void;
 }
 
 const Inventory = (props: IInventoryProps) => {
-  const { businessMenu, businessPayment } = props;
+  const { businessMenu, businessSettings } = props;
+  console.log("[OrderMenu] businessMenu", businessMenu); // tslint:disable-line
+  console.log("[OrderMenu] businessSettings", businessSettings); // tslint:disable-line
   return (
     <React.Fragment>
       {businessMenu && businessMenu.length ? (
@@ -39,7 +41,7 @@ const Inventory = (props: IInventoryProps) => {
             <SListItem
               key={`inventory-${item.name}`}
               item={item}
-              businessPayment={businessPayment}
+              businessSettings={businessSettings}
               onClick={() => props.adminShowInventoryModal(item)}
             />
           ))}
@@ -57,7 +59,7 @@ const Inventory = (props: IInventoryProps) => {
 };
 const reduxProps = (store: any) => ({
   businessMenu: store.admin.businessMenu,
-  businessPayment: store.admin.businessPayment
+  businessSettings: store.admin.businessSettings
 });
 
 export default connect(

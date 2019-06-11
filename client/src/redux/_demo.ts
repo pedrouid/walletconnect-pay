@@ -1,14 +1,12 @@
 import {
   IBusinessData,
   IBusinessProfile,
-  IBusinessTax,
-  IBusinessPayment,
+  IBusinessSettings,
   IBusinessMenu
 } from "../helpers/types";
 import {
   defaultBusinessProfile,
-  defaultBusinessTax,
-  defaultBusinessPayment
+  defaultBusinessSettings
 } from "../helpers/business";
 
 // -- Constants ------------------------------------------------------------- //
@@ -17,9 +15,7 @@ const DEMO_LOAD_DEMO = "demo/DEMO_LOAD_DEMO";
 
 const DEMO_UPDATE_BUSINESS_PROFILE = "demo/DEMO_UPDATE_BUSINESS_PROFILE";
 
-const DEMO_UPDATE_BUSINESS_TAX = "demo/DEMO_UPDATE_BUSINESS_TAX";
-
-const DEMO_UPDATE_BUSINESS_PAYMENT = "demo/DEMO_UPDATE_BUSINESS_PAYMENT";
+const DEMO_UPDATE_BUSINESS_SETTINGS = "demo/DEMO_UPDATE_BUSINESS_SETTINGS";
 
 const DEMO_UPDATE_BUSINESS_MENU = "demo/DEMO_UPDATE_BUSINESS_MENU";
 
@@ -34,8 +30,7 @@ export const demoLoadDemo = (demo: {
   type: DEMO_LOAD_DEMO,
   payload: {
     profile: demo.data.profile,
-    tax: demo.data.tax,
-    payment: demo.data.payment,
+    settings: demo.data.settings,
     menu: demo.menu
   }
 });
@@ -47,16 +42,11 @@ export const demoUpdateBusinessProfile = (
   payload: businessProfile
 });
 
-export const demoUpdateBusinessTax = (businessTax: IBusinessTax) => ({
-  type: DEMO_UPDATE_BUSINESS_TAX,
-  payload: businessTax
-});
-
-export const demoUpdateBusinessPayment = (
-  businessPayment: IBusinessPayment
+export const demoUpdateBusinessSettings = (
+  businessSettings: IBusinessSettings
 ) => ({
-  type: DEMO_UPDATE_BUSINESS_PAYMENT,
-  payload: businessPayment
+  type: DEMO_UPDATE_BUSINESS_SETTINGS,
+  payload: businessSettings
 });
 
 export const demoUpdateBusinessMenu = (businessMenu: IBusinessMenu) => ({
@@ -70,8 +60,7 @@ export const demoClearState = () => ({ type: DEMO_CLEAR_STATE });
 const INITIAL_STATE = {
   businessMenu: [],
   businessProfile: defaultBusinessProfile,
-  businessTax: defaultBusinessTax,
-  businessPayment: defaultBusinessPayment
+  businessSettings: defaultBusinessSettings
 };
 
 export default (state = INITIAL_STATE, action: any) => {
@@ -80,16 +69,13 @@ export default (state = INITIAL_STATE, action: any) => {
       return {
         ...state,
         businessProfile: action.payload.profile,
-        businessTax: action.payload.tax,
-        businessPayment: action.payload.payment,
+        businessSettings: action.payload.settings,
         businessMenu: action.payload.menu
       };
     case DEMO_UPDATE_BUSINESS_PROFILE:
       return { ...state, businessProfile: action.payload };
-    case DEMO_UPDATE_BUSINESS_TAX:
-      return { ...state, businessTax: action.payload };
-    case DEMO_UPDATE_BUSINESS_PAYMENT:
-      return { ...state, businessPayment: action.payload };
+    case DEMO_UPDATE_BUSINESS_SETTINGS:
+      return { ...state, businessSettings: action.payload };
     case DEMO_UPDATE_BUSINESS_MENU:
       return { ...state, businessMenu: action.payload };
     case DEMO_CLEAR_STATE:

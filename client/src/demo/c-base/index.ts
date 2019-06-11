@@ -2,8 +2,7 @@ import {
   IBusinessMenu,
   IBusinessData,
   IBusinessProfile,
-  IBusinessTax,
-  IBusinessPayment
+  IBusinessSettings
 } from "../../helpers/types";
 
 import logo from "./logo.png";
@@ -102,8 +101,6 @@ const menu: IBusinessMenu = [
   }
 ];
 
-const methods = PAYMENT_METHODS;
-
 const name = "C-Base";
 
 const profile: IBusinessProfile = {
@@ -117,22 +114,18 @@ const profile: IBusinessProfile = {
   phone: ""
 };
 
-const tax: IBusinessTax = {
-  rate: 19,
-  included: true,
-  display: false
-};
-
-const payment: IBusinessPayment = {
-  methods,
-  currency: "EUR",
-  address: ""
+const settings: IBusinessSettings = {
+  taxRate: 19,
+  taxIncluded: true,
+  taxDisplay: false,
+  paymentMethods: PAYMENT_METHODS,
+  paymentCurrency: "EUR",
+  paymentAddress: ""
 };
 
 const data: IBusinessData = {
   profile,
-  tax,
-  payment
+  settings
 };
 
 export default { data, menu };

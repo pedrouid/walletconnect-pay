@@ -1,6 +1,6 @@
 import {
   ICheckoutDetails,
-  IBusinessTax,
+  IBusinessSettings,
   IOrderItem,
   IOrderJson
 } from "../helpers/types";
@@ -26,14 +26,14 @@ export const defaultCheckoutDetails: ICheckoutDetails = {
 
 export function formatCheckoutDetails(
   rawtotal: number,
-  businessTax: IBusinessTax
+  businessSettings: IBusinessSettings
 ): ICheckoutDetails {
   let checkout;
   const _rawtotal = convertNumberToString(rawtotal);
   console.log("[formatCheckoutDetails] _rawtotal", _rawtotal); // tslint:disable-line
-  const tax = multiply(_rawtotal, divide(businessTax.rate, 100));
+  const tax = multiply(_rawtotal, divide(businessSettings.taxRate, 100));
   console.log("[formatCheckoutDetails] tax", tax); // tslint:disable-line
-  if (businessTax.included) {
+  if (businessSettings.taxIncluded) {
     const _subtotal = subtract(_rawtotal, tax);
     console.log("[formatCheckoutDetails] _subtotal", _subtotal); // tslint:disable-line
     checkout = {

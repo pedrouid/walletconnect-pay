@@ -84,24 +84,20 @@ export interface IBusinessProfile {
   phone: string;
 }
 
-export interface IBusinessTax {
-  rate: number;
-  included: boolean;
-  display: boolean;
-}
-
-export interface IBusinessPayment {
-  methods: IPaymentMethod[];
-  currency: string;
-  address: string;
+export interface IBusinessSettings {
+  taxRate: number;
+  taxIncluded: boolean;
+  taxDisplay: boolean;
+  paymentMethods: IPaymentMethod[];
+  paymentCurrency: string;
+  paymentAddress: string;
 }
 
 export type IBusinessMenu = IMenuItem[];
 
 export interface IBusinessData {
   profile: IBusinessProfile;
-  tax: IBusinessTax;
-  payment: IBusinessPayment;
+  settings: IBusinessSettings;
 }
 
 export type IPaymentStatus = "pending" | "success" | "failure";

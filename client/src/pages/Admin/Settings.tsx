@@ -9,8 +9,7 @@ import Input from "../../components/Input";
 import { SLabel, SSeparator } from "../../components/common";
 import {
   adminUpdateBusinessProfile,
-  adminUpdateBusinessTax,
-  adminUpdateBusinessPayment,
+  adminUpdateBusinessSettings,
   adminSaveBusinessData
 } from "../../redux/_admin";
 import { notificationShow } from "../../redux/_notification";
@@ -39,12 +38,11 @@ const SSettingsSection = styled.div`
 class Settings extends React.Component<any, any> {
   public static propTypes = {
     businessProfile: PropTypes.object.isRequired,
-    businessTax: PropTypes.object.isRequired,
-    businessPayment: PropTypes.object.isRequired
+    businessSettings: PropTypes.object.isRequired
   };
 
   public render() {
-    const { businessProfile, businessTax, businessPayment } = this.props;
+    const { businessProfile, businessSettings } = this.props;
     return (
       <SSettingsWrapper>
         <SSettingsSection>
@@ -61,10 +59,10 @@ class Settings extends React.Component<any, any> {
             type="tel"
             label="Rate"
             placeholder="20"
-            value={`${businessTax.rate}`}
+            value={`${businessSettings.taxRate}`}
             onChange={(e: any) =>
-              this.props.adminUpdateBusinessTax({
-                rate: e.target.value
+              this.props.adminUpdateBusinessSettings({
+                taxRate: e.target.value
               })
             }
             onSubmit={this.props.adminSaveBusinessData}
@@ -72,20 +70,20 @@ class Settings extends React.Component<any, any> {
           <SLabel>{"Included"}</SLabel>
           <Toggle
             color={`lightBlue`}
-            active={businessTax.included}
+            active={businessSettings.taxIncluded}
             onClick={() => {
-              this.props.adminUpdateBusinessTax({
-                included: !businessTax.included
+              this.props.adminUpdateBusinessSettings({
+                taxIncluded: !businessSettings.taxIncluded
               });
               this.props.adminSaveBusinessData();
             }}
           />
           <SLabel>{"Display"}</SLabel>
           <Toggle
-            active={businessTax.display}
+            active={businessSettings.taxDisplay}
             onClick={() => {
-              this.props.adminUpdateBusinessTax({
-                display: !businessTax.display
+              this.props.adminUpdateBusinessSettings({
+                taxDisplay: !businessSettings.taxDisplay
               });
               this.props.adminSaveBusinessData();
             }}
@@ -96,13 +94,13 @@ class Settings extends React.Component<any, any> {
           <h6>{"Payment"}</h6>
           <Dropdown
             label="Currency"
-            selected={businessPayment.currency}
+            selected={businessSettings.paymentCurrency}
             options={NATIVE_CURRENCIES}
             displayKey={"currency"}
             targetKey={"currency"}
-            onChange={(currency: string) => {
-              this.props.adminUpdateBusinessPayment({
-                currency
+            onChange={(paymentCurrency: string) => {
+              this.props.adminUpdateBusinessSettings({
+                paymentCurrency
               });
               this.props.adminSaveBusinessData();
             }}
@@ -112,10 +110,10 @@ class Settings extends React.Component<any, any> {
             label="ETH Address"
             autoComplete={"off"}
             placeholder="0x0000000000000000000000000000000000000000"
-            value={businessPayment.address}
+            value={businessSettings.paymentAddress}
             onChange={(e: any) =>
-              this.props.adminUpdateBusinessPayment({
-                address: e.target.value
+              this.props.adminUpdateBusinessSettings({
+                paymentAddress: e.target.value
               })
             }
             onSubmit={this.props.adminSaveBusinessData}
@@ -124,8 +122,8 @@ class Settings extends React.Component<any, any> {
           <MultipleChoice
             choices={PAYMENT_METHODS}
             selected={
-              businessPayment && businessPayment.methods
-                ? businessPayment.methods
+              businessSettings && businessSettings.paymentMethods
+                ? businessSettings.paymentMethods
                 : []
             }
             renderItem={(method: IPaymentMethod) => (
@@ -134,10 +132,10 @@ class Settings extends React.Component<any, any> {
               </React.Fragment>
             )}
             requiredKeys={["type", "assetSymbol"]}
-            onChange={methods => {
-              if (methods && methods.length) {
-                this.props.adminUpdateBusinessPayment({
-                  methods
+            onChange={paymentMethods => {
+              if (paymentMethods && paymentMethods.length) {
+                this.props.adminUpdateBusinessSettings({
+                  paymentMethods
                 });
                 this.props.adminSaveBusinessData();
               } else {
@@ -156,16 +154,14 @@ class Settings extends React.Component<any, any> {
 
 const reduxProps = (store: any) => ({
   businessProfile: store.admin.businessProfile,
-  businessTax: store.admin.businessTax,
-  businessPayment: store.admin.businessPayment
+  businessSettings: store.admin.businessSettings
 });
 
 export default connect(
   reduxProps,
   {
     adminUpdateBusinessProfile,
-    adminUpdateBusinessTax,
-    adminUpdateBusinessPayment,
+    adminUpdateBusinessSettings,
     adminSaveBusinessData,
     notificationShow
   }

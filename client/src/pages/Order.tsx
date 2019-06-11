@@ -60,8 +60,7 @@ class Order extends React.Component<any, any> {
     const {
       adminLoading,
       businessProfile,
-      businessTax,
-      businessPayment,
+      businessSettings,
       businessMenu,
       paymentMethod,
       orderLoading,
@@ -77,8 +76,7 @@ class Order extends React.Component<any, any> {
         <OrderMenu
           loading={orderLoading || adminLoading}
           businessProfile={businessProfile}
-          businessTax={businessTax}
-          businessPayment={businessPayment}
+          businessSettings={businessSettings}
           businessMenu={businessMenu}
           items={items}
           checkout={checkout}
@@ -88,8 +86,7 @@ class Order extends React.Component<any, any> {
         />
         <Checkout
           loading={orderLoading}
-          businessTax={businessTax}
-          businessPayment={businessPayment}
+          businessSettings={businessSettings}
           submitted={submitted}
           payment={payment}
           paymentMethod={paymentMethod}
@@ -111,8 +108,7 @@ const reduxProps = (store: any) => ({
   adminLoading: store.admin.loading,
   address: store.admin.address,
   businessProfile: store.admin.businessProfile,
-  businessTax: store.admin.businessTax,
-  businessPayment: store.admin.businessPayment,
+  businessSettings: store.admin.businessSettings,
   businessMenu: store.admin.businessMenu,
   paymentMethod: store.order.paymentMethod,
   orderLoading: store.order.loading,

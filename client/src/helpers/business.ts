@@ -1,8 +1,7 @@
 import {
   IBusinessData,
   IBusinessProfile,
-  IBusinessTax,
-  IBusinessPayment,
+  IBusinessSettings,
   IBusinessMenu
 } from "../helpers/types";
 import { openBox, openSpace, setSpacePrivate, getSpacePrivate } from "./box";
@@ -29,16 +28,13 @@ export const defaultBusinessProfile: IBusinessProfile = {
   phone: ""
 };
 
-export const defaultBusinessTax: IBusinessTax = {
-  rate: 20,
-  included: true,
-  display: true
-};
-
-export const defaultBusinessPayment: IBusinessPayment = {
-  currency: "USD",
-  address: "",
-  methods: [
+export const defaultBusinessSettings: IBusinessSettings = {
+  taxRate: 20,
+  taxIncluded: true,
+  taxDisplay: true,
+  paymentCurrency: "USD",
+  paymentAddress: "",
+  paymentMethods: [
     {
       type: "walletconnect",
       chainId: 1,
@@ -49,8 +45,7 @@ export const defaultBusinessPayment: IBusinessPayment = {
 
 export const defaultBusinessData: IBusinessData = {
   profile: defaultBusinessProfile,
-  tax: defaultBusinessTax,
-  payment: defaultBusinessPayment
+  settings: defaultBusinessSettings
 };
 
 export function formatBusinessData(
@@ -61,17 +56,12 @@ export function formatBusinessData(
     ...partialBusinessData.profile
   };
 
-  const tax = {
-    ...defaultBusinessTax,
-    ...partialBusinessData.tax
+  const settings = {
+    ...defaultBusinessSettings,
+    ...partialBusinessData.settings
   };
 
-  const payment = {
-    ...defaultBusinessPayment,
-    ...partialBusinessData.payment
-  };
-
-  const businessData: IBusinessData = { profile, tax, payment };
+  const businessData: IBusinessData = { profile, settings };
 
   return businessData;
 }

@@ -2,8 +2,7 @@ import {
   IBusinessMenu,
   IBusinessData,
   IBusinessProfile,
-  IBusinessTax,
-  IBusinessPayment
+  IBusinessSettings
 } from "../../helpers/types";
 
 import logo from "./logo.png";
@@ -102,8 +101,6 @@ const menu: IBusinessMenu = [
   }
 ];
 
-const methods = PAYMENT_METHODS;
-
 const name = "Bufficorn Café";
 
 const profile: IBusinessProfile = {
@@ -117,22 +114,18 @@ const profile: IBusinessProfile = {
   phone: ""
 };
 
-const tax: IBusinessTax = {
-  rate: 11,
-  included: false,
-  display: true
-};
-
-const payment: IBusinessPayment = {
-  methods,
-  currency: "USD",
-  address: ""
+const settings: IBusinessSettings = {
+  taxRate: 11,
+  taxIncluded: false,
+  taxDisplay: true,
+  paymentMethods: PAYMENT_METHODS,
+  paymentCurrency: "USD",
+  paymentAddress: ""
 };
 
 const data: IBusinessData = {
   profile,
-  tax,
-  payment
+  settings
 };
 
 export default { data, menu };
