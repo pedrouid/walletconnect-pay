@@ -16,8 +16,9 @@ import {
   SColumnList,
   SColumnRow,
   STitle,
-  SGrid,
+  SGrid
 } from "../components/common";
+import { sanitizeImgSrc } from "../helpers/utilities";
 
 const SHeader = styled.div`
   width: 100%;
@@ -62,7 +63,9 @@ const OrderMenu = (props: any) => {
     <React.Fragment>
       <SHeader>
         <Link style={{ display: "flex" }} to="/admin">
-          {businessProfile.logo && <SLogo src={businessProfile.logo} alt="" />}
+          {businessProfile.logo && (
+            <SLogo src={sanitizeImgSrc(businessProfile.logo)} alt="" />
+          )}
           <SBranding>{businessProfile.name}</SBranding>
         </Link>
       </SHeader>
