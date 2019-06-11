@@ -14,13 +14,12 @@ import Checkout from "../layouts/Checkout";
 import Loader from "../components/Loader";
 import OrderMenu from "../layouts/OrderMenu";
 import { revertPageMeta, updatePageMeta } from "../helpers/utilities";
+import demo from "../demo";
 
-class Order extends React.Component<any, any> {
+class Demo extends React.Component<any, any> {
   public componentDidMount() {
-    const businessName = this.props.match.params.businessName;
-    if (businessName) {
-      this.props.orderLoadDemo(businessName);
-    }
+    const businessName = this.props.match.params.businessName || demo[0];
+    this.props.orderLoadDemo(businessName);
     this.updatePageMeta();
   }
 
@@ -126,4 +125,4 @@ export default connect(
     orderSubmit,
     orderUnsubmit
   }
-)(Order);
+)(Demo);
