@@ -1,5 +1,9 @@
 import Web3 from "web3";
-import { queryChainId, formatItemId, sanitizeUrl } from "../helpers/utilities";
+import {
+  queryChainId,
+  formatItemId,
+  getCurrentPathname
+} from "../helpers/utilities";
 import { IProfile, ISettings, IMenuItem } from "../helpers/types";
 import {
   openBusinessBox,
@@ -81,8 +85,8 @@ export const adminConnectWallet = (provider: any) => async (
           menu
         }
       });
-      const pathname = sanitizeUrl(window.browserHistory.location.pathname);
-      if (["/", "/signup"].includes(pathname)) {
+      const current = getCurrentPathname();
+      if (["/", "/signup"].includes(current)) {
         window.browserHistory.push("/admin");
       }
     } else {
