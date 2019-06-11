@@ -20,6 +20,7 @@ import chocolateMuffin from "./images/chocolate-muffin.jpg";
 import scone from "./images/scone.jpg";
 import croissant from "./images/croissant.jpg";
 import almondCroissant from "./images/almond-croissant.jpg";
+import { formatBusinessId } from "src/helpers/utilities";
 
 const menu: IBusinessMenu = [
   {
@@ -113,13 +114,15 @@ const methods: IPaymentMethod[] = [
   }
 ];
 
+const name = "Bufficorn Café";
+
 const profile: IBusinessProfile = {
-  id: "bufficorn",
-  name: "Bufficorn Café",
+  id: formatBusinessId(name),
+  name,
   description: "Local roasted café in Denver",
   logo,
   type: "cafe",
-  country: "DE",
+  country: "US",
   email: "",
   phone: ""
 };

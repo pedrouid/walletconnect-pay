@@ -63,7 +63,7 @@ const Header = (props: any) => (
       </SBalanceAmount>
     </SHeaderLeft>
     <SHeaderRight>
-      <Link to="/demo/bufficorn">
+      <Link to="/demo/bufficorn-cafe">
         <SMenuButton>{"Go To Menu"}</SMenuButton>
       </Link>
     </SHeaderRight>

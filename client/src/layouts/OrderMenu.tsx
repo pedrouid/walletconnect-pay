@@ -6,6 +6,7 @@ import { IMenuItem, IOrderItem } from "../helpers/types";
 import Button from "../components/Button";
 import Summary from "../components/Summary";
 import ListItem from "../components/ListItem";
+import EmptyState from "../components/EmptyState";
 import {
   SColumnWrapper,
   SColumn,
@@ -16,7 +17,6 @@ import {
   SColumnRow,
   STitle,
   SGrid,
-  SCenter
 } from "../components/common";
 
 const SHeader = styled.div`
@@ -44,14 +44,6 @@ const SLogo = styled.img`
 
 const SListItem = styled(ListItem)`
   margin-bottom: 10px;
-`;
-
-const SEmptyState = styled(SCenter)`
-  background: rgb(${colors.white});
-  & h6 {
-    font-weight: normal;
-    color: rgb(${colors.grey});
-  }
 `;
 
 const OrderMenu = (props: any) => {
@@ -92,9 +84,7 @@ const OrderMenu = (props: any) => {
                 ))}
             </SGrid>
           ) : (
-            <SEmptyState>
-              <h6>{`No Items`}</h6>
-            </SEmptyState>
+            <EmptyState />
           )}
         </SColumn>
         <SColumnOrder width={30}>
@@ -117,9 +107,7 @@ const OrderMenu = (props: any) => {
               ))}
             </SColumnList>
           ) : (
-            <SEmptyState>
-              <h6>{`No Items`}</h6>
-            </SEmptyState>
+            <EmptyState />
           )}
           <SColumnFooter>
             <Summary

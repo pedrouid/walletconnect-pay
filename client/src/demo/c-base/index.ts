@@ -20,6 +20,7 @@ import kraftmalz from "./images/kraftmalz.jpg";
 import obc_strong from "./images/obc_strong.jpg";
 import berliner from "./images/berliner.jpg";
 import laschak from "./images/laschak.jpg";
+import { formatBusinessId } from "src/helpers/utilities";
 
 const menu: IBusinessMenu = [
   {
@@ -113,12 +114,14 @@ const methods: IPaymentMethod[] = [
   }
 ];
 
+const name = "C-Base";
+
 const profile: IBusinessProfile = {
-  id: "c-base",
-  name: "C-Base",
+  id: formatBusinessId(name),
+  name,
   description: "",
   logo,
-  type: "cafe",
+  type: "bar",
   country: "DE",
   email: "",
   phone: ""

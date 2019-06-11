@@ -226,7 +226,7 @@ const INITIAL_STATE = {
   web3: null,
   address: "",
   chainId: 1,
-  businessMenu: null,
+  businessMenu: [],
   businessProfile: defaultBusinessProfile,
   businessTax: defaultBusinessTax,
   businessPayment: defaultBusinessPayment

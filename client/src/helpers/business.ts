@@ -7,7 +7,7 @@ import {
 import { openBox, openSpace, setSpacePrivate, getSpacePrivate } from "./box";
 import { BUSINESS_DATA } from "../constants/space";
 
-import demo from "../data";
+import demo from "../demo";
 
 export function getDemoBusiness(bussinessName: string) {
   let result = null;
