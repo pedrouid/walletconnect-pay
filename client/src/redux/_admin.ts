@@ -239,6 +239,12 @@ export const adminShowInventoryModal = (menuItem?: IMenuItem) => async (
           dispatch(modalHide());
           dispatch(adminAddMenuItem(menuItem));
         }
+      },
+      onRemoveItem: (menuItem: IMenuItem) => {
+        if (menuItem) {
+          dispatch(modalHide());
+          dispatch(adminRemoveMenuItem(menuItem));
+        }
       }
     })
   );

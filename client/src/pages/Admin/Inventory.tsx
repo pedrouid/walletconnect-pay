@@ -19,6 +19,10 @@ const SButtonWrapper = styled.div`
   right: ${CONTENT_PADDING * 2}px;
 `;
 
+const SListItem = styled(ListItem)`
+  margin-bottom: 10px;
+`;
+
 interface IInventoryProps {
   businessMenu: IBusinessMenu;
   businessPayment: IBusinessPayment;
@@ -32,7 +36,7 @@ const Inventory = (props: IInventoryProps) => {
       {businessMenu && businessMenu.length ? (
         <SColumnList>
           {businessMenu.map((item: IMenuItem) => (
-            <ListItem
+            <SListItem
               key={`inventory-${item.name}`}
               item={item}
               businessPayment={businessPayment}
@@ -44,7 +48,9 @@ const Inventory = (props: IInventoryProps) => {
         <EmptyState message={`No Inventory`} />
       )}
       <SButtonWrapper>
-        <Button onClick={props.adminShowInventoryModal}>{`Add Item`}</Button>
+        <Button
+          onClick={() => props.adminShowInventoryModal()}
+        >{`Add Item`}</Button>
       </SButtonWrapper>
     </React.Fragment>
   );
