@@ -10,7 +10,6 @@ import {
   defaultBusinessTax,
   defaultBusinessPayment
 } from "../helpers/business";
-import { logRedux } from "src/helpers/dev";
 
 // -- Constants ------------------------------------------------------------- //
 
@@ -76,8 +75,6 @@ const INITIAL_STATE = {
 };
 
 export default (state = INITIAL_STATE, action: any) => {
-  // TODO: DELETE THIS
-  logRedux(action);
   switch (action.type) {
     case DEMO_LOAD_DEMO:
       return {
