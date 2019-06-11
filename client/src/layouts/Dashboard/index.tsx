@@ -12,7 +12,7 @@ import {
 } from "../../constants/dashboard";
 import Loader from "../../components/Loader";
 import { SCenter } from "../../components/common";
-import { isActivePath } from "src/helpers/utilities";
+import { isActivePath } from "../../helpers/utilities";
 
 const SWrapper = styled.div`
   position: relative;
@@ -75,7 +75,7 @@ const SContentLoading = styled(SCenter)<IContentContainerStyleProps>`
   pointer-events: ${({ show }) => (show ? "auto" : "none")};
 `;
 
-const FixedScrollPaths = ["/inventory"];
+const FixedScrollPaths = ["/inventory", "/orders"];
 
 function isFixedScroll(match: any) {
   let fixedScroll = false;
