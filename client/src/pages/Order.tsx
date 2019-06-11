@@ -30,17 +30,17 @@ class Order extends React.Component<any, any> {
   }
 
   public componentDidUpdate(prevProps: any) {
-    if (prevProps.businessProfile.name !== this.props.businessProfile.name) {
+    if (prevProps.profile.name !== this.props.profile.name) {
       this.updatePageMeta();
     }
   }
 
   public updatePageMeta() {
-    const { businessProfile } = this.props;
+    const { profile } = this.props;
     updatePageMeta({
-      title: businessProfile.name,
-      description: businessProfile.description,
-      favicon: sanitizeImgSrc(businessProfile.logo)
+      title: profile.name,
+      description: profile.description,
+      favicon: sanitizeImgSrc(profile.logo)
     });
   }
 
@@ -59,9 +59,9 @@ class Order extends React.Component<any, any> {
   public render() {
     const {
       adminLoading,
-      businessProfile,
-      businessSettings,
-      businessMenu,
+      profile,
+      settings,
+      menu,
       paymentMethod,
       orderLoading,
       submitted,
@@ -75,9 +75,9 @@ class Order extends React.Component<any, any> {
       <React.Fragment>
         <OrderMenu
           loading={orderLoading || adminLoading}
-          businessProfile={businessProfile}
-          businessSettings={businessSettings}
-          businessMenu={businessMenu}
+          profile={profile}
+          settings={settings}
+          menu={menu}
           items={items}
           checkout={checkout}
           onSubmit={this.onSubmit}
@@ -86,7 +86,7 @@ class Order extends React.Component<any, any> {
         />
         <Checkout
           loading={orderLoading}
-          businessSettings={businessSettings}
+          settings={settings}
           submitted={submitted}
           payment={payment}
           paymentMethod={paymentMethod}
@@ -107,9 +107,9 @@ class Order extends React.Component<any, any> {
 const reduxProps = (store: any) => ({
   adminLoading: store.admin.loading,
   address: store.admin.address,
-  businessProfile: store.admin.businessProfile,
-  businessSettings: store.admin.businessSettings,
-  businessMenu: store.admin.businessMenu,
+  profile: store.admin.profile,
+  settings: store.admin.settings,
+  menu: store.admin.menu,
   paymentMethod: store.order.paymentMethod,
   orderLoading: store.order.loading,
   submitted: store.order.submitted,

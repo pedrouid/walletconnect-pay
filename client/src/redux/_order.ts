@@ -79,7 +79,6 @@ export const orderLoadDemo = (businessName?: string) => (
   const demo = getDemoBusiness(businessName);
 
   if (demo) {
-    console.log("[orderLoadDemo] demo", demo); // tslint:disable-line
     const paymentMethod =
       demo.data.settings.paymentMethods.length === 1
         ? demo.data.settings.paymentMethods[0]
@@ -105,16 +104,14 @@ export const orderLoadDemo = (businessName?: string) => (
 };
 
 export const orderLoadMenu = () => (dispatch: any, getState: any) => {
-  const { businessSettings } = getState().admin;
+  const { settings } = getState().admin;
 
   dispatch({ type: ORDER_LOAD_MENU_REQUEST });
 
   const paymentMethod =
-    businessSettings.paymentMethods.length === 1
-      ? businessSettings.paymentMethods[0]
-      : null;
+    settings.paymentMethods.length === 1 ? settings.paymentMethods[0] : null;
 
-  const paymentAddress = businessSettings.paymentAddress || "";
+  const paymentAddress = settings.paymentAddress || "";
 
   dispatch({
     type: ORDER_LOAD_MENU_SUCCESS,
@@ -130,7 +127,7 @@ export const orderAddItem = (item: IMenuItem) => (
   dispatch: any,
   getState: any
 ) => {
-  const { businessSettings } = getState().admin;
+  const { settings } = getState().admin;
   let { items } = getState().order;
   let { rawtotal } = getState().order.checkout;
 
@@ -157,7 +154,7 @@ export const orderAddItem = (item: IMenuItem) => (
     type: ORDER_UPDATE_ITEMS,
     payload: {
       items,
-      checkout: formatCheckoutDetails(rawtotal, businessSettings)
+      checkout: formatCheckoutDetails(rawtotal, settings)
     }
   });
 };
@@ -166,7 +163,7 @@ export const orderRemoveItem = (item: IMenuItem) => (
   dispatch: any,
   getState: any
 ) => {
-  const { businessSettings } = getState().admin;
+  const { settings } = getState().admin;
   let { items } = getState().order;
   let { rawtotal } = getState().order.checkout;
 
@@ -187,7 +184,7 @@ export const orderRemoveItem = (item: IMenuItem) => (
     type: ORDER_UPDATE_ITEMS,
     payload: {
       items,
-      checkout: formatCheckoutDetails(rawtotal, businessSettings)
+      checkout: formatCheckoutDetails(rawtotal, settings)
     }
   });
 };
@@ -216,15 +213,15 @@ export const orderManageSession = (
 
 export const orderShowPaymentMethods = () => (dispatch: any, getState: any) => {
   const { demo } = getState().order;
-  let businessSettings;
+  let settings;
   if (demo) {
-    businessSettings = getState().demo.businessSettings;
+    settings = getState().demo.settings;
   } else {
-    businessSettings = getState().admin.businessSettings;
+    settings = getState().admin.settings;
   }
   const callback = (paymentMethod?: IPaymentMethod) =>
     dispatch(orderChoosePaymentMethod(paymentMethod));
-  dispatch(modalShow(PAYMENT_METHODS_MODAL, { businessSettings, callback }));
+  dispatch(modalShow(PAYMENT_METHODS_MODAL, { settings, callback }));
 };
 
 export const orderChoosePaymentMethod = (
@@ -332,7 +329,7 @@ export const orderRequestPayment = (account: string, orderId: string) => async (
   dispatch({ type: ORDER_PAYMENT_REQUEST });
 
   try {
-    const { businessSettings } = getState().admin;
+    const { settings } = getState().admin;
 
     const { checkout, paymentMethod, paymentAddress } = getState().order;
 
@@ -344,7 +341,7 @@ export const orderRequestPayment = (account: string, orderId: string) => async (
       from,
       to,
       amount,
-      businessSettings.paymentCurrency,
+      settings.paymentCurrency,
       paymentMethod.assetSymbol,
       paymentMethod.chainId
     );

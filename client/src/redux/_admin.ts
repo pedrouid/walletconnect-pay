@@ -1,16 +1,12 @@
 import Web3 from "web3";
 import { queryChainId, formatItemId, sanitizeUrl } from "../helpers/utilities";
-import {
-  IBusinessProfile,
-  IBusinessSettings,
-  IMenuItem
-} from "../helpers/types";
+import { IProfile, ISettings, IMenuItem } from "../helpers/types";
 import {
   openBusinessBox,
-  setBusinessData,
-  setBusinessMenu,
-  defaultBusinessProfile,
-  defaultBusinessSettings
+  setData,
+  setMenu,
+  defaultProfile,
+  defaultSettings
 } from "../helpers/business";
 import { isNaN } from "../helpers/bignumber";
 import { modalShow, modalHide } from "./_modal";
@@ -30,18 +26,15 @@ const ADMIN_SUBMIT_SIGNUP_REQUEST = "admin/ADMIN_SUBMIT_SIGNUP_REQUEST";
 const ADMIN_SUBMIT_SIGNUP_SUCCESS = "admin/ADMIN_SUBMIT_SIGNUP_SUCCESS";
 const ADMIN_SUBMIT_SIGNUP_FAILURE = "admin/ADMIN_SUBMIT_SIGNUP_FAILURE";
 
-const ADMIN_SAVE_BUSINESS_DATA_REQUEST =
-  "admin/ADMIN_SAVE_BUSINESS_DATA_REQUEST";
-const ADMIN_SAVE_BUSINESS_DATA_SUCCESS =
-  "admin/ADMIN_SAVE_BUSINESS_DATA_SUCCESS";
-const ADMIN_SAVE_BUSINESS_DATA_FAILURE =
-  "admin/ADMIN_SAVE_BUSINESS_DATA_FAILURE";
+const ADMIN_SAVE_DATA_REQUEST = "admin/ADMIN_SAVE_DATA_REQUEST";
+const ADMIN_SAVE_DATA_SUCCESS = "admin/ADMIN_SAVE_DATA_SUCCESS";
+const ADMIN_SAVE_DATA_FAILURE = "admin/ADMIN_SAVE_DATA_FAILURE";
 
-const ADMIN_UPDATE_BUSINESS_PROFILE = "admin/ADMIN_UPDATE_BUSINESS_PROFILE";
+const ADMIN_UPDATE_PROFILE = "admin/ADMIN_UPDATE_PROFILE";
 
-const ADMIN_UPDATE_BUSINESS_SETTINGS = "admin/ADMIN_UPDATE_BUSINESS_SETTINGS";
+const ADMIN_UPDATE_SETTINGS = "admin/ADMIN_UPDATE_SETTINGS";
 
-const ADMIN_UPDATE_BUSINESS_MENU = "admin/ADMIN_UPDATE_BUSINESS_MENU";
+const ADMIN_UPDATE_MENU = "admin/ADMIN_UPDATE_MENU";
 
 const ADMIN_CLEAR_STATE = "admin/ADMIN_CLEAR_STATE";
 
@@ -93,20 +86,16 @@ export const adminConnectWallet = (provider: any) => async (
         window.browserHistory.push("/admin");
       }
     } else {
-      const {
-        businessMenu,
-        businessProfile,
-        businessSettings
-      } = getState().admin;
+      const { menu, profile, settings } = getState().admin;
       dispatch({
         type: ADMIN_CONNECT_SUCCESS,
         payload: {
           web3,
           address,
           chainId,
-          profile: businessProfile,
-          settings: businessSettings,
-          menu: businessMenu
+          profile,
+          settings,
+          menu
         }
       });
       window.browserHistory.push("/signup");
@@ -121,13 +110,11 @@ export const adminConnectWallet = (provider: any) => async (
 export const adminSubmitSignUp = () => async (dispatch: any, getState: any) => {
   dispatch({ type: ADMIN_SUBMIT_SIGNUP_REQUEST });
   try {
-    const { address, businessProfile } = getState().admin;
-    const { profile, settings } = await setBusinessData({
-      profile: businessProfile,
-      settings: { ...defaultBusinessSettings, paymentAddress: address }
-    });
+    const { address, profile } = getState().admin;
+    const settings = { ...getState().admin.settings, paymentAddress: address };
+    await setData({ profile, settings });
 
-    // await apiSendEmailVerification(businessProfile.email)
+    // await apiSendEmailVerification(profile.email)
 
     dispatch({
       type: ADMIN_SUBMIT_SIGNUP_SUCCESS,
@@ -142,70 +129,62 @@ export const adminSubmitSignUp = () => async (dispatch: any, getState: any) => {
   }
 };
 
-export const adminSaveBusinessData = () => async (
-  dispatch: any,
-  getState: any
-) => {
-  const { address, businessProfile, businessSettings } = getState().admin;
+export const adminSaveData = () => async (dispatch: any, getState: any) => {
+  const { address, profile, settings } = getState().admin;
   if (!address) {
     return;
   }
-  dispatch({ type: ADMIN_SAVE_BUSINESS_DATA_REQUEST });
+  dispatch({ type: ADMIN_SAVE_DATA_REQUEST });
   try {
-    const { profile, settings } = await setBusinessData({
-      profile: businessProfile,
-      settings: businessSettings
+    await setData({
+      profile,
+      settings
     });
 
     dispatch({
-      type: ADMIN_SAVE_BUSINESS_DATA_SUCCESS,
+      type: ADMIN_SAVE_DATA_SUCCESS,
       payload: { profile, settings }
     });
   } catch (error) {
     console.error(error); // tslint:disable-line
     dispatch(notificationShow(error.message, true));
-    dispatch({ type: ADMIN_SAVE_BUSINESS_DATA_FAILURE });
+    dispatch({ type: ADMIN_SAVE_DATA_FAILURE });
   }
 };
 
-export const adminSaveBusinessMenu = () => async (
-  dispatch: any,
-  getState: any
-) => {
-  const { address, businessMenu } = getState().admin;
+export const adminSaveMenu = () => async (dispatch: any, getState: any) => {
+  const { address, menu } = getState().admin;
   if (!address) {
     return;
   }
-  await setBusinessMenu(businessMenu);
+  await setMenu(menu);
 };
 
-export const adminUpdateBusinessProfile = (
-  updatedBusinessProfile: Partial<IBusinessProfile>
-) => async (dispatch: any, getState: any) => {
-  let { businessProfile } = getState().admin;
-  businessProfile = {
-    ...businessProfile,
-    ...updatedBusinessProfile
+export const adminUpdateProfile = (updatedProfile: Partial<IProfile>) => async (
+  dispatch: any,
+  getState: any
+) => {
+  let { profile } = getState().admin;
+  profile = {
+    ...profile,
+    ...updatedProfile
   };
-  businessProfile.id = formatItemId(businessProfile.name);
-  dispatch({ type: ADMIN_UPDATE_BUSINESS_PROFILE, payload: businessProfile });
+  profile.id = formatItemId(profile.name);
+  dispatch({ type: ADMIN_UPDATE_PROFILE, payload: profile });
 };
 
-export const adminUpdateBusinessSettings = (
-  updatedBusinessSettings: Partial<IBusinessSettings>
+export const adminUpdateSettings = (
+  updatedSettings: Partial<ISettings>
 ) => async (dispatch: any, getState: any) => {
-  if (
-    updatedBusinessSettings.taxRate &&
-    isNaN(updatedBusinessSettings.taxRate)
-  ) {
+  if (updatedSettings.taxRate && isNaN(updatedSettings.taxRate)) {
     return;
   }
-  let { businessSettings } = getState().admin;
-  businessSettings = {
-    ...businessSettings,
-    ...updatedBusinessSettings
+  let { settings } = getState().admin;
+  settings = {
+    ...settings,
+    ...updatedSettings
   };
-  dispatch({ type: ADMIN_UPDATE_BUSINESS_SETTINGS, payload: businessSettings });
+  dispatch({ type: ADMIN_UPDATE_SETTINGS, payload: settings });
 };
 
 export const adminShowInventoryModal = (menuItem?: IMenuItem) => async (
@@ -233,34 +212,28 @@ export const adminAddMenuItem = (menuItem: IMenuItem) => async (
   dispatch: any,
   getState: any
 ) => {
-  let { businessMenu } = getState().admin;
-  const matches = businessMenu.filter(
-    (item: IMenuItem) => item.id === menuItem.id
-  );
+  let { menu } = getState().admin;
+  const matches = menu.filter((item: IMenuItem) => item.id === menuItem.id);
   if (matches && matches.length) {
     menuItem = {
       ...matches[0],
       ...menuItem
     };
-    businessMenu = businessMenu.filter(
-      (item: IMenuItem) => item.id !== menuItem.id
-    );
+    menu = menu.filter((item: IMenuItem) => item.id !== menuItem.id);
   }
-  businessMenu = [...businessMenu, menuItem];
-  dispatch({ type: ADMIN_UPDATE_BUSINESS_MENU, payload: businessMenu });
-  dispatch(adminSaveBusinessMenu());
+  menu = [...menu, menuItem];
+  dispatch({ type: ADMIN_UPDATE_MENU, payload: menu });
+  dispatch(adminSaveMenu());
 };
 
 export const adminRemoveMenuItem = (menuItem: IMenuItem) => async (
   dispatch: any,
   getState: any
 ) => {
-  let { businessMenu } = getState().admin;
-  businessMenu = businessMenu.filter(
-    (item: IMenuItem) => item.id !== menuItem.id
-  );
-  dispatch({ type: ADMIN_UPDATE_BUSINESS_MENU, payload: businessMenu });
-  dispatch(adminSaveBusinessMenu());
+  let { menu } = getState().admin;
+  menu = menu.filter((item: IMenuItem) => item.id !== menuItem.id);
+  dispatch({ type: ADMIN_UPDATE_MENU, payload: menu });
+  dispatch(adminSaveMenu());
 };
 
 export const adminClearState = () => ({ type: ADMIN_CLEAR_STATE });
@@ -271,9 +244,9 @@ const INITIAL_STATE = {
   web3: null,
   address: "",
   chainId: 1,
-  businessMenu: [],
-  businessProfile: defaultBusinessProfile,
-  businessSettings: defaultBusinessSettings
+  menu: [],
+  profile: defaultProfile,
+  settings: defaultSettings
 };
 
 export default (state = INITIAL_STATE, action: any) => {
@@ -289,9 +262,9 @@ export default (state = INITIAL_STATE, action: any) => {
         web3: action.payload.web3,
         address: action.payload.address,
         chainId: action.payload.chainId,
-        businessMenu: action.payload.menu || [],
-        businessProfile: action.payload.profile || defaultBusinessProfile,
-        businessSettings: action.payload.settings || defaultBusinessSettings
+        menu: action.payload.menu || [],
+        profile: action.payload.profile || defaultProfile,
+        settings: action.payload.settings || defaultSettings
       };
     case ADMIN_CONNECT_FAILURE:
       return { ...state, loading: false };
@@ -301,24 +274,24 @@ export default (state = INITIAL_STATE, action: any) => {
       return {
         ...state,
         loading: false,
-        businessProfile: action.payload.profile,
-        businessSettings: action.payload.settings
+        profile: action.payload.profile,
+        settings: action.payload.settings
       };
     case ADMIN_SUBMIT_SIGNUP_FAILURE:
       return { ...state, loading: false };
-    case ADMIN_SAVE_BUSINESS_DATA_SUCCESS:
+    case ADMIN_SAVE_DATA_SUCCESS:
       return {
         ...state,
-        businessProfile: action.payload.profile,
-        businessSettings: action.payload.settings
+        profile: action.payload.profile,
+        settings: action.payload.settings
       };
 
-    case ADMIN_UPDATE_BUSINESS_PROFILE:
-      return { ...state, businessProfile: action.payload };
-    case ADMIN_UPDATE_BUSINESS_SETTINGS:
-      return { ...state, businessSettings: action.payload };
-    case ADMIN_UPDATE_BUSINESS_MENU:
-      return { ...state, businessMenu: action.payload };
+    case ADMIN_UPDATE_PROFILE:
+      return { ...state, profile: action.payload };
+    case ADMIN_UPDATE_SETTINGS:
+      return { ...state, settings: action.payload };
+    case ADMIN_UPDATE_MENU:
+      return { ...state, menu: action.payload };
     case ADMIN_CLEAR_STATE:
       return { ...state, ...INITIAL_STATE };
     default:

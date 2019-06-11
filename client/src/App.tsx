@@ -61,7 +61,7 @@ class App extends React.Component<any, any> {
 
 const reduxProps = (store: any) => ({
   address: store.admin.address,
-  businessProfile: store.admin.businessProfile
+  profile: store.admin.profile
 });
 
 export default withRouter(connect(

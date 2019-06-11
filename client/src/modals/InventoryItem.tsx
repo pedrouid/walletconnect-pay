@@ -50,12 +50,6 @@ class InventoryItem extends React.Component<IInventoryItemProps, IMenuItem> {
   };
 
   public render() {
-    // tslint:disable-next-line
-    console.log("[Inventory Item Modal] this.props", this.props);
-
-    // tslint:disable-next-line
-    console.log("[Inventory Item Modal] this.state", this.state);
-
     return (
       <React.Fragment>
         <h6>{`Add Item`}</h6>

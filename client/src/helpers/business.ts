@@ -1,11 +1,6 @@
-import {
-  IBusinessData,
-  IBusinessProfile,
-  IBusinessSettings,
-  IBusinessMenu
-} from "../helpers/types";
+import { IData, IProfile, ISettings, IMenu } from "../helpers/types";
 import { openBox, openSpace, setSpacePrivate, getSpacePrivate } from "./box";
-import { BUSINESS_DATA, BUSINESS_MENU } from "../constants/space";
+import { DATA, MENU } from "../constants/space";
 
 import demo from "../demo";
 
@@ -17,7 +12,7 @@ export function getDemoBusiness(bussinessName?: string) {
   return result;
 }
 
-export const defaultBusinessProfile: IBusinessProfile = {
+export const defaultProfile: IProfile = {
   id: "",
   name: "",
   description: "",
@@ -28,7 +23,7 @@ export const defaultBusinessProfile: IBusinessProfile = {
   phone: ""
 };
 
-export const defaultBusinessSettings: IBusinessSettings = {
+export const defaultSettings: ISettings = {
   taxRate: 20,
   taxIncluded: true,
   taxDisplay: true,
@@ -43,64 +38,58 @@ export const defaultBusinessSettings: IBusinessSettings = {
   ]
 };
 
-export const defaultBusinessData: IBusinessData = {
-  profile: defaultBusinessProfile,
-  settings: defaultBusinessSettings
+export const defaultData: IData = {
+  profile: defaultProfile,
+  settings: defaultSettings
 };
 
-export function formatBusinessData(
-  partialBusinessData: Partial<IBusinessData>
-): IBusinessData {
+export function formatData(partialData: Partial<IData>): IData {
   const profile = {
-    ...defaultBusinessProfile,
-    ...partialBusinessData.profile
+    ...defaultProfile,
+    ...partialData.profile
   };
 
   const settings = {
-    ...defaultBusinessSettings,
-    ...partialBusinessData.settings
+    ...defaultSettings,
+    ...partialData.settings
   };
 
-  const businessData: IBusinessData = { profile, settings };
+  const data: IData = { profile, settings };
 
-  return businessData;
+  return data;
 }
 
-export async function setBusinessData(
-  partialBusinessData: Partial<IBusinessData>
-): Promise<IBusinessData> {
-  const businessData = formatBusinessData(partialBusinessData);
-  await setSpacePrivate(BUSINESS_DATA, businessData);
-  return businessData;
+export async function setData(partialData: Partial<IData>): Promise<IData> {
+  const data = formatData(partialData);
+  await setSpacePrivate(DATA, data);
+  return data;
 }
 
-export async function getBusinessData(): Promise<IBusinessData> {
-  const businessData = await getSpacePrivate(BUSINESS_DATA);
-  return businessData;
+export async function getData(): Promise<IData> {
+  const data = await getSpacePrivate(DATA);
+  return data;
 }
 
-export async function setBusinessMenu(
-  businessMenu: IBusinessMenu
-): Promise<IBusinessMenu> {
-  await setSpacePrivate(BUSINESS_MENU, businessMenu);
-  return businessMenu;
+export async function setMenu(menu: IMenu): Promise<IMenu> {
+  await setSpacePrivate(MENU, menu);
+  return menu;
 }
 
-export async function getBusinessMenu(): Promise<IBusinessMenu> {
-  const businessMenu = await getSpacePrivate(BUSINESS_MENU);
-  return businessMenu;
+export async function getMenu(): Promise<IMenu> {
+  const menu = await getSpacePrivate(MENU);
+  return menu;
 }
 
 export async function openBusinessBox(
   address: string,
   provider: any
-): Promise<{ data: IBusinessData | null; menu: IBusinessMenu | null }> {
+): Promise<{ data: IData | null; menu: IMenu | null }> {
   await openBox(address, provider);
 
   await openSpace();
 
-  const data = await getBusinessData();
-  const menu = await getBusinessMenu();
+  const data = await getData();
+  const menu = await getMenu();
 
   return { data, menu };
 }

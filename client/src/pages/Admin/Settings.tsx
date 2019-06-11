@@ -8,9 +8,9 @@ import Toggle from "../../components/Toggle";
 import Input from "../../components/Input";
 import { SLabel, SSeparator } from "../../components/common";
 import {
-  adminUpdateBusinessProfile,
-  adminUpdateBusinessSettings,
-  adminSaveBusinessData
+  adminUpdateProfile,
+  adminUpdateSettings,
+  adminSaveData
 } from "../../redux/_admin";
 import { notificationShow } from "../../redux/_notification";
 
@@ -37,20 +37,20 @@ const SSettingsSection = styled.div`
 
 class Settings extends React.Component<any, any> {
   public static propTypes = {
-    businessProfile: PropTypes.object.isRequired,
-    businessSettings: PropTypes.object.isRequired
+    profile: PropTypes.object.isRequired,
+    settings: PropTypes.object.isRequired
   };
 
   public render() {
-    const { businessProfile, businessSettings } = this.props;
+    const { profile, settings } = this.props;
     return (
       <SSettingsWrapper>
         <SSettingsSection>
           <ProfileForm
             title={`Profile`}
-            businessProfile={businessProfile}
-            onInputChange={this.props.adminUpdateBusinessProfile}
-            onInputSubmit={this.props.adminSaveBusinessData}
+            profile={profile}
+            onInputChange={this.props.adminUpdateProfile}
+            onInputSubmit={this.props.adminSaveData}
           />
         </SSettingsSection>
         <SSettingsSection>
@@ -59,33 +59,33 @@ class Settings extends React.Component<any, any> {
             type="tel"
             label="Rate"
             placeholder="20"
-            value={`${businessSettings.taxRate}`}
+            value={`${settings.taxRate}`}
             onChange={(e: any) =>
-              this.props.adminUpdateBusinessSettings({
+              this.props.adminUpdateSettings({
                 taxRate: e.target.value
               })
             }
-            onSubmit={this.props.adminSaveBusinessData}
+            onSubmit={this.props.adminSaveData}
           />
           <SLabel>{"Included"}</SLabel>
           <Toggle
             color={`lightBlue`}
-            active={businessSettings.taxIncluded}
+            active={settings.taxIncluded}
             onClick={() => {
-              this.props.adminUpdateBusinessSettings({
-                taxIncluded: !businessSettings.taxIncluded
+              this.props.adminUpdateSettings({
+                taxIncluded: !settings.taxIncluded
               });
-              this.props.adminSaveBusinessData();
+              this.props.adminSaveData();
             }}
           />
           <SLabel>{"Display"}</SLabel>
           <Toggle
-            active={businessSettings.taxDisplay}
+            active={settings.taxDisplay}
             onClick={() => {
-              this.props.adminUpdateBusinessSettings({
-                taxDisplay: !businessSettings.taxDisplay
+              this.props.adminUpdateSettings({
+                taxDisplay: !settings.taxDisplay
               });
-              this.props.adminSaveBusinessData();
+              this.props.adminSaveData();
             }}
           />
 
@@ -94,15 +94,15 @@ class Settings extends React.Component<any, any> {
           <h6>{"Payment"}</h6>
           <Dropdown
             label="Currency"
-            selected={businessSettings.paymentCurrency}
+            selected={settings.paymentCurrency}
             options={NATIVE_CURRENCIES}
             displayKey={"currency"}
             targetKey={"currency"}
             onChange={(paymentCurrency: string) => {
-              this.props.adminUpdateBusinessSettings({
+              this.props.adminUpdateSettings({
                 paymentCurrency
               });
-              this.props.adminSaveBusinessData();
+              this.props.adminSaveData();
             }}
           />
           <Input
@@ -110,21 +110,19 @@ class Settings extends React.Component<any, any> {
             label="ETH Address"
             autoComplete={"off"}
             placeholder="0x0000000000000000000000000000000000000000"
-            value={businessSettings.paymentAddress}
+            value={settings.paymentAddress}
             onChange={(e: any) =>
-              this.props.adminUpdateBusinessSettings({
+              this.props.adminUpdateSettings({
                 paymentAddress: e.target.value
               })
             }
-            onSubmit={this.props.adminSaveBusinessData}
+            onSubmit={this.props.adminSaveData}
           />
           <SLabel>{"Methods"}</SLabel>
           <MultipleChoice
             choices={PAYMENT_METHODS}
             selected={
-              businessSettings && businessSettings.paymentMethods
-                ? businessSettings.paymentMethods
-                : []
+              settings && settings.paymentMethods ? settings.paymentMethods : []
             }
             renderItem={(method: IPaymentMethod) => (
               <React.Fragment>
@@ -134,10 +132,10 @@ class Settings extends React.Component<any, any> {
             requiredKeys={["type", "assetSymbol"]}
             onChange={paymentMethods => {
               if (paymentMethods && paymentMethods.length) {
-                this.props.adminUpdateBusinessSettings({
+                this.props.adminUpdateSettings({
                   paymentMethods
                 });
-                this.props.adminSaveBusinessData();
+                this.props.adminSaveData();
               } else {
                 this.props.notificationShow(
                   "Required to accept at least one payment method",
@@ -153,16 +151,16 @@ class Settings extends React.Component<any, any> {
 }
 
 const reduxProps = (store: any) => ({
-  businessProfile: store.admin.businessProfile,
-  businessSettings: store.admin.businessSettings
+  profile: store.admin.profile,
+  settings: store.admin.settings
 });
 
 export default connect(
   reduxProps,
   {
-    adminUpdateBusinessProfile,
-    adminUpdateBusinessSettings,
-    adminSaveBusinessData,
+    adminUpdateProfile,
+    adminUpdateSettings,
+    adminSaveData,
     notificationShow
   }
 )(Settings);

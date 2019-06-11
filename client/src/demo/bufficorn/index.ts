@@ -1,9 +1,4 @@
-import {
-  IBusinessMenu,
-  IBusinessData,
-  IBusinessProfile,
-  IBusinessSettings
-} from "../../helpers/types";
+import { IMenu, IData, IProfile, ISettings } from "../../helpers/types";
 
 import logo from "./logo.png";
 
@@ -21,7 +16,7 @@ import almondCroissant from "./images/almond-croissant.jpg";
 import { formatItemId } from "../../helpers/utilities";
 import PAYMENT_METHODS from "../../constants/paymentMethods";
 
-const menu: IBusinessMenu = [
+const menu: IMenu = [
   {
     id: "espresso",
     name: "Espresso",
@@ -103,7 +98,7 @@ const menu: IBusinessMenu = [
 
 const name = "Bufficorn Café";
 
-const profile: IBusinessProfile = {
+const profile: IProfile = {
   id: formatItemId(name),
   name,
   description: "Local roasted café in Denver",
@@ -114,7 +109,7 @@ const profile: IBusinessProfile = {
   phone: ""
 };
 
-const settings: IBusinessSettings = {
+const settings: ISettings = {
   taxRate: 11,
   taxIncluded: false,
   taxDisplay: true,
@@ -123,7 +118,7 @@ const settings: IBusinessSettings = {
   paymentAddress: ""
 };
 
-const data: IBusinessData = {
+const data: IData = {
   profile,
   settings
 };

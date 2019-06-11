@@ -23,17 +23,17 @@ class Demo extends React.Component<any, any> {
   }
 
   public componentDidUpdate(prevProps: any) {
-    if (prevProps.businessProfile.name !== this.props.businessProfile.name) {
+    if (prevProps.profile.name !== this.props.profile.name) {
       this.updatePageMeta();
     }
   }
 
   public updatePageMeta() {
-    const { businessProfile } = this.props;
+    const { profile } = this.props;
     updatePageMeta({
-      title: businessProfile.name,
-      description: businessProfile.description,
-      favicon: businessProfile.logo
+      title: profile.name,
+      description: profile.description,
+      favicon: profile.logo
     });
   }
 
@@ -51,9 +51,9 @@ class Demo extends React.Component<any, any> {
 
   public render() {
     const {
-      businessProfile,
-      businessSettings,
-      businessMenu,
+      profile,
+      settings,
+      menu,
       paymentMethod,
       loading,
       submitted,
@@ -67,9 +67,9 @@ class Demo extends React.Component<any, any> {
       <React.Fragment>
         <OrderMenu
           loading={loading}
-          businessProfile={businessProfile}
-          businessSettings={businessSettings}
-          businessMenu={businessMenu}
+          profile={profile}
+          settings={settings}
+          menu={menu}
           items={items}
           checkout={checkout}
           onSubmit={this.onSubmit}
@@ -78,7 +78,7 @@ class Demo extends React.Component<any, any> {
         />
         <Checkout
           loading={loading}
-          businessSettings={businessSettings}
+          settings={settings}
           submitted={submitted}
           payment={payment}
           paymentMethod={paymentMethod}
@@ -97,9 +97,9 @@ class Demo extends React.Component<any, any> {
 }
 
 const reduxProps = (store: any) => ({
-  businessProfile: store.demo.businessProfile,
-  businessSettings: store.demo.businessSettings,
-  businessMenu: store.demo.businessMenu,
+  profile: store.demo.profile,
+  settings: store.demo.settings,
+  menu: store.demo.menu,
   paymentMethod: store.order.paymentMethod,
   loading: store.order.loading,
   submitted: store.order.submitted,

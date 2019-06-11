@@ -73,7 +73,7 @@ export type IBusinessType =
   | "fine_dining"
   | "popup_restaurant";
 
-export interface IBusinessProfile {
+export interface IProfile {
   id: string;
   name: string;
   description: string;
@@ -84,7 +84,7 @@ export interface IBusinessProfile {
   phone: string;
 }
 
-export interface IBusinessSettings {
+export interface ISettings {
   taxRate: number;
   taxIncluded: boolean;
   taxDisplay: boolean;
@@ -93,11 +93,11 @@ export interface IBusinessSettings {
   paymentAddress: string;
 }
 
-export type IBusinessMenu = IMenuItem[];
+export type IMenu = IMenuItem[];
 
-export interface IBusinessData {
-  profile: IBusinessProfile;
-  settings: IBusinessSettings;
+export interface IData {
+  profile: IProfile;
+  settings: ISettings;
 }
 
 export type IPaymentStatus = "pending" | "success" | "failure";

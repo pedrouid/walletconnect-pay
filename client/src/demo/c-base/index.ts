@@ -1,9 +1,4 @@
-import {
-  IBusinessMenu,
-  IBusinessData,
-  IBusinessProfile,
-  IBusinessSettings
-} from "../../helpers/types";
+import { IMenu, IData, IProfile, ISettings } from "../../helpers/types";
 
 import logo from "./logo.png";
 
@@ -21,7 +16,7 @@ import laschak from "./images/laschak.jpg";
 import { formatItemId } from "../../helpers/utilities";
 import PAYMENT_METHODS from "../../constants/paymentMethods";
 
-const menu: IBusinessMenu = [
+const menu: IMenu = [
   {
     id: "club-mate",
     name: "Club Mate",
@@ -103,7 +98,7 @@ const menu: IBusinessMenu = [
 
 const name = "C-Base";
 
-const profile: IBusinessProfile = {
+const profile: IProfile = {
   id: formatItemId(name),
   name,
   description: "",
@@ -114,7 +109,7 @@ const profile: IBusinessProfile = {
   phone: ""
 };
 
-const settings: IBusinessSettings = {
+const settings: ISettings = {
   taxRate: 19,
   taxIncluded: true,
   taxDisplay: false,
@@ -123,7 +118,7 @@ const settings: IBusinessSettings = {
   paymentAddress: ""
 };
 
-const data: IBusinessData = {
+const data: IData = {
   profile,
   settings
 };

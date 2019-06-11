@@ -1,11 +1,7 @@
 import * as React from "react";
 import styled from "styled-components";
 import { connect } from "react-redux";
-import {
-  IMenuItem,
-  IBusinessMenu,
-  IBusinessSettings
-} from "../../helpers/types";
+import { IMenuItem, IMenu, ISettings } from "../../helpers/types";
 import { adminShowInventoryModal } from "../../redux/_admin";
 import ListItem from "../../components/ListItem";
 import EmptyState from "../../components/EmptyState";
@@ -24,24 +20,24 @@ const SListItem = styled(ListItem)`
 `;
 
 interface IInventoryProps {
-  businessMenu: IBusinessMenu;
-  businessSettings: IBusinessSettings;
+  menu: IMenu;
+  settings: ISettings;
   adminShowInventoryModal: (menuItem?: IMenuItem) => void;
 }
 
 const Inventory = (props: IInventoryProps) => {
-  const { businessMenu, businessSettings } = props;
-  console.log("[OrderMenu] businessMenu", businessMenu); // tslint:disable-line
-  console.log("[OrderMenu] businessSettings", businessSettings); // tslint:disable-line
+  const { menu, settings } = props;
+  console.log("[OrderMenu] menu", menu); // tslint:disable-line
+  console.log("[OrderMenu] settings", settings); // tslint:disable-line
   return (
     <React.Fragment>
-      {businessMenu && businessMenu.length ? (
+      {menu && menu.length ? (
         <SColumnList>
-          {businessMenu.map((item: IMenuItem) => (
+          {menu.map((item: IMenuItem) => (
             <SListItem
               key={`inventory-${item.name}`}
               item={item}
-              businessSettings={businessSettings}
+              settings={settings}
               onClick={() => props.adminShowInventoryModal(item)}
             />
           ))}
@@ -58,8 +54,8 @@ const Inventory = (props: IInventoryProps) => {
   );
 };
 const reduxProps = (store: any) => ({
-  businessMenu: store.admin.businessMenu,
-  businessSettings: store.admin.businessSettings
+  menu: store.admin.menu,
+  settings: store.admin.settings
 });
 
 export default connect(
