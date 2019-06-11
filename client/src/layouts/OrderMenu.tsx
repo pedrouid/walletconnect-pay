@@ -49,6 +49,7 @@ const SListItem = styled(ListItem)`
 
 const OrderMenu = (props: any) => {
   const {
+    loading,
     businessProfile,
     businessTax,
     businessPayment,
@@ -87,7 +88,7 @@ const OrderMenu = (props: any) => {
                 ))}
             </SGrid>
           ) : (
-            <EmptyState />
+            <EmptyState loading={loading} />
           )}
         </SColumn>
         <SColumnOrder width={30}>
@@ -110,7 +111,7 @@ const OrderMenu = (props: any) => {
               ))}
             </SColumnList>
           ) : (
-            <EmptyState />
+            <EmptyState loading={loading} />
           )}
           <SColumnFooter>
             <Summary

@@ -58,12 +58,13 @@ class Order extends React.Component<any, any> {
 
   public render() {
     const {
+      adminLoading,
       businessProfile,
       businessTax,
       businessPayment,
       businessMenu,
       paymentMethod,
-      loading,
+      orderLoading,
       submitted,
       items,
       checkout,
@@ -71,9 +72,10 @@ class Order extends React.Component<any, any> {
       uri,
       orderId
     } = this.props;
-    return !this.props.loading ? (
+    return !orderLoading ? (
       <React.Fragment>
         <OrderMenu
+          loading={orderLoading || adminLoading}
           businessProfile={businessProfile}
           businessTax={businessTax}
           businessPayment={businessPayment}
@@ -85,7 +87,7 @@ class Order extends React.Component<any, any> {
           onRemove={this.props.orderRemoveItem}
         />
         <Checkout
-          loading={loading}
+          loading={orderLoading}
           businessTax={businessTax}
           businessPayment={businessPayment}
           submitted={submitted}
@@ -106,13 +108,14 @@ class Order extends React.Component<any, any> {
 }
 
 const reduxProps = (store: any) => ({
+  adminLoading: store.admin.loading,
   address: store.admin.address,
   businessProfile: store.admin.businessProfile,
   businessTax: store.admin.businessTax,
   businessPayment: store.admin.businessPayment,
   businessMenu: store.admin.businessMenu,
   paymentMethod: store.order.paymentMethod,
-  loading: store.order.loading,
+  orderLoading: store.order.loading,
   submitted: store.order.submitted,
   items: store.order.items,
   checkout: store.order.checkout,

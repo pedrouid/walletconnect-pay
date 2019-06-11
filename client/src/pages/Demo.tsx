@@ -67,6 +67,7 @@ class Demo extends React.Component<any, any> {
     return !this.props.loading ? (
       <React.Fragment>
         <OrderMenu
+          loading={loading}
           businessProfile={businessProfile}
           businessTax={businessTax}
           businessPayment={businessPayment}
