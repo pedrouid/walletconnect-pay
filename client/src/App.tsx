@@ -44,10 +44,11 @@ class App extends React.Component<any, any> {
         <SContent>
           <Switch>
             <Route exact path="/" component={Home} />
-            <Route exact path="/demo/:businessName" component={Demo} />
             <Route exact path="/order" component={Order} />
             <Route exact path="/signup" component={SignUp} />
             <Route path="/admin" component={Admin} />
+            <Route path="/demo/:businessName" component={Demo} />
+            <Route path="/demo" component={Demo} />
             <Route component={NotFound} />
           </Switch>
         </SContent>

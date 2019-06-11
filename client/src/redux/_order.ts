@@ -66,7 +66,7 @@ const ORDER_CLEAR_STATE = "order/ORDER_CLEAR_STATE";
 
 // -- Actions --------------------------------------------------------------- //
 
-export const orderLoadDemo = (businessName: string) => (
+export const orderLoadDemo = (businessName?: string) => (
   dispatch: any,
   getState: any
 ) => {

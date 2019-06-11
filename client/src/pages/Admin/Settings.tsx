@@ -6,14 +6,20 @@ import ProfileForm from "../../components/ProfileForm";
 import Dropdown from "../../components/Dropdown";
 import Toggle from "../../components/Toggle";
 import Input from "../../components/Input";
-import { SField, SLabel, SSeparator } from "../../components/common";
+import { SLabel, SSeparator } from "../../components/common";
 import {
   adminUpdateBusinessProfile,
   adminUpdateBusinessTax,
   adminUpdateBusinessPayment,
   adminSaveBusinessData
 } from "../../redux/_admin";
+import { notificationShow } from "../../redux/_notification";
+
 import NATIVE_CURRENCIES from "../../constants/nativeCurrencies";
+import MultipleChoice from "../../components/MultipleChoice";
+import PAYMENT_METHODS from "../../constants/paymentMethods";
+import { IPaymentMethod } from "src/helpers/types";
+import { capitalize } from "src/helpers/utilities";
 
 const SSettingsWrapper = styled.div`
   width: 100%;
@@ -27,6 +33,8 @@ const SSettingsSection = styled.div`
   flex-direction: column;
   padding: 20px;
 `;
+
+// const Choice = (props: any) => <p>{props.method.type}</p>;
 
 class Settings extends React.Component<any, any> {
   public static propTypes = {
@@ -74,7 +82,6 @@ class Settings extends React.Component<any, any> {
           />
           <SLabel>{"Display"}</SLabel>
           <Toggle
-            color={`lightBlue`}
             active={businessTax.display}
             onClick={() => {
               this.props.adminUpdateBusinessTax({
@@ -114,7 +121,33 @@ class Settings extends React.Component<any, any> {
             onSubmit={this.props.adminSaveBusinessData}
           />
           <SLabel>{"Methods"}</SLabel>
-          <SField>{businessPayment.methods.toString()}</SField>
+          <MultipleChoice
+            choices={PAYMENT_METHODS}
+            selected={
+              businessPayment && businessPayment.methods
+                ? businessPayment.methods
+                : []
+            }
+            renderItem={(method: IPaymentMethod) => (
+              <React.Fragment>
+                {`${capitalize(method.type)} (${method.assetSymbol})`}
+              </React.Fragment>
+            )}
+            requiredKeys={["type", "assetSymbol"]}
+            onChange={methods => {
+              if (methods && methods.length) {
+                this.props.adminUpdateBusinessPayment({
+                  methods
+                });
+                this.props.adminSaveBusinessData();
+              } else {
+                this.props.notificationShow(
+                  "Required to accept at least one payment method",
+                  true
+                );
+              }
+            }}
+          />
         </SSettingsSection>
       </SSettingsWrapper>
     );
@@ -133,6 +166,7 @@ export default connect(
     adminUpdateBusinessProfile,
     adminUpdateBusinessTax,
     adminUpdateBusinessPayment,
-    adminSaveBusinessData
+    adminSaveBusinessData,
+    notificationShow
   }
 )(Settings);

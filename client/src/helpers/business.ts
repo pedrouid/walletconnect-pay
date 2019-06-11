@@ -10,10 +10,10 @@ import { BUSINESS_DATA, BUSINESS_MENU } from "../constants/space";
 
 import demo from "../demo";
 
-export function getDemoBusiness(bussinessName: string) {
-  let result = null;
-  if (demo[bussinessName]) {
-    result = demo[bussinessName] || null;
+export function getDemoBusiness(bussinessName?: string) {
+  let result = demo[Object.keys(demo)[0]];
+  if (bussinessName && demo[bussinessName]) {
+    result = demo[bussinessName];
   }
   return result;
 }

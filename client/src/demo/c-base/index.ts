@@ -1,7 +1,6 @@
 import {
   IBusinessMenu,
   IBusinessData,
-  IPaymentMethod,
   IBusinessProfile,
   IBusinessTax,
   IBusinessPayment
@@ -21,6 +20,7 @@ import obc_strong from "./images/obc_strong.jpg";
 import berliner from "./images/berliner.jpg";
 import laschak from "./images/laschak.jpg";
 import { formatItemId } from "../../helpers/utilities";
+import PAYMENT_METHODS from "../../constants/paymentMethods";
 
 const menu: IBusinessMenu = [
   {
@@ -102,28 +102,7 @@ const menu: IBusinessMenu = [
   }
 ];
 
-const methods: IPaymentMethod[] = [
-  {
-    type: "burner",
-    chainId: 100,
-    assetSymbol: "xDAI"
-  },
-  {
-    type: "walletconnect",
-    chainId: 1,
-    assetSymbol: "ETH"
-  },
-  {
-    type: "walletconnect",
-    chainId: 1,
-    assetSymbol: "DAI"
-  },
-  {
-    type: "walletconnect",
-    chainId: 100,
-    assetSymbol: "xDAI"
-  }
-];
+const methods = PAYMENT_METHODS;
 
 const name = "C-Base";
 

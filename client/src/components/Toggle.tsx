@@ -54,11 +54,14 @@ interface IToggleProps extends IToggleStyleProps {
   onClick?: any;
 }
 
-const Toggle = (props: IToggleProps) => (
-  <SToggle color={props.color} active={props.active} onClick={props.onClick}>
-    <div />
-  </SToggle>
-);
+const Toggle = (props: IToggleProps) => {
+  const { color, active, onClick, ...otherProps } = props;
+  return (
+    <SToggle color={color} active={active} onClick={onClick} {...otherProps}>
+      <div />
+    </SToggle>
+  );
+};
 
 Toggle.propTypes = {
   active: PropTypes.bool,
@@ -68,7 +71,7 @@ Toggle.propTypes = {
 
 Toggle.defaultProps = {
   active: false,
-  color: "green"
+  color: "lightBlue"
 };
 
 export default Toggle;

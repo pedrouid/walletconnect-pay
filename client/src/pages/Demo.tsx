@@ -14,11 +14,10 @@ import Checkout from "../layouts/Checkout";
 import Loader from "../components/Loader";
 import OrderMenu from "../layouts/OrderMenu";
 import { revertPageMeta, updatePageMeta } from "../helpers/utilities";
-import demo from "../demo";
 
 class Demo extends React.Component<any, any> {
   public componentDidMount() {
-    const businessName = this.props.match.params.businessName || demo[0];
+    const businessName = this.props.match.params.businessName;
     this.props.orderLoadDemo(businessName);
     this.updatePageMeta();
   }

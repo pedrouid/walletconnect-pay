@@ -1,7 +1,6 @@
 import {
   IBusinessMenu,
   IBusinessData,
-  IPaymentMethod,
   IBusinessProfile,
   IBusinessTax,
   IBusinessPayment
@@ -21,6 +20,7 @@ import scone from "./images/scone.jpg";
 import croissant from "./images/croissant.jpg";
 import almondCroissant from "./images/almond-croissant.jpg";
 import { formatItemId } from "../../helpers/utilities";
+import PAYMENT_METHODS from "../../constants/paymentMethods";
 
 const menu: IBusinessMenu = [
   {
@@ -102,28 +102,7 @@ const menu: IBusinessMenu = [
   }
 ];
 
-const methods: IPaymentMethod[] = [
-  {
-    type: "burner",
-    chainId: 100,
-    assetSymbol: "xDAI"
-  },
-  {
-    type: "walletconnect",
-    chainId: 1,
-    assetSymbol: "ETH"
-  },
-  {
-    type: "walletconnect",
-    chainId: 1,
-    assetSymbol: "DAI"
-  },
-  {
-    type: "walletconnect",
-    chainId: 100,
-    assetSymbol: "xDAI"
-  }
-];
+const methods = PAYMENT_METHODS;
 
 const name = "Bufficorn Café";
 
