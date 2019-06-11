@@ -14,6 +14,7 @@ const SToggle = styled.div<IToggleStyleProps>`
   padding: 0;
   box-sizing: border-box;
   transition: ${transitions.base};
+  width: fit-content;
   & div {
     transition: ${transitions.base};
     appearance: none;
