@@ -128,9 +128,10 @@ export const adminConnectWallet = (provider: any) => async (
 export const adminSubmitSignUp = () => async (dispatch: any, getState: any) => {
   dispatch({ type: ADMIN_SUBMIT_SIGNUP_REQUEST });
   try {
-    const { businessProfile } = getState().admin;
+    const { address, businessProfile } = getState().admin;
     const { profile, tax, payment } = await setBusinessData({
-      profile: businessProfile
+      profile: businessProfile,
+      payment: { ...defaultBusinessPayment, address }
     });
 
     // await apiSendEmailVerification(businessProfile.email)
