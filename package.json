@@ -11,7 +11,7 @@
     "clean": "npm install && concurrently \"npm run clean:server\" \"npm run clean:server\"",
     "bootstrap:server": "cd ./server && npm install",
     "bootstrap:client": "cd ./client && npm install",
-    "bootstrap": "npm install && concurrently \"npm run bootstrap:server\" \"npm run bootstrap:server\"",
+    "bootstrap": "npm install && concurrently \"npm run bootstrap:server\" \"npm run bootstrap:client\"",
     "build:server": "cd ./server && npm run build",
     "build:client": "cd ./client && npm run build",
     "build": "concurrently \"npm run build:server\" \"npm run build:client\"",
