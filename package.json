@@ -8,7 +8,7 @@
   "scripts": {
     "clean:server": "cd ./server && npm run clean:all",
     "clean:client": "cd ./client && npm run clean:all",
-    "clean": "npm install && concurrently \"npm run clean:server\" \"npm run clean:server\"",
+    "clean": "concurrently \"npm run clean:server\" \"npm run clean:server\"",
     "bootstrap:server": "cd ./server && npm install",
     "bootstrap:client": "cd ./client && npm install",
     "bootstrap": "npm install && concurrently \"npm run bootstrap:server\" \"npm run bootstrap:client\"",
